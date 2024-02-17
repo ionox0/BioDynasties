@@ -62,9 +62,6 @@ export class BasicCharacterControllerInput extends Component {
     ray.direction.set(pos.x, pos.y, 0.5).unproject(
         this._params.camera).sub(ray.origin).normalize();
 
-    // hack
-    document.getElementById('quest-ui').style.visibility = 'hidden';
-
     for (let p of pickables) {
       // GOOD ENOUGH
       const box = new THREE.Box3().setFromObject(p._mesh);
