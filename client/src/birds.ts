@@ -106,7 +106,7 @@ const fragmentShaderVelocity = `
 
 
         // Attract flocks to the center
-        vec3 central = vec3( 0., 0., 0. );
+        vec3 central = vec3( 0., 200., 0. );
         dir = selfPosition - central;
         dist = length( dir );
 
@@ -197,7 +197,7 @@ const sizes = [0.2, 0.1];
 const selectModel = Math.floor(Math.random() * gltfs.length);
 
 /* TEXTURE WIDTH FOR SIMULATION */
-let WIDTH = 2;
+let WIDTH = 20;
 let BIRDS = WIDTH * WIDTH;
 
 /* BAKE ANIMATION INTO TEXTURE and CREATE GEOMETRY FROM BASE MODEL */
@@ -260,30 +260,24 @@ export class Birds {
           const curMorph = Math.floor(
             (j / durationAnimation) * morphAttributes.length
           );
-          const nextMorph =
-            (Math.floor((j / durationAnimation) * morphAttributes.length) + 1) %
-            morphAttributes.length;
-          const lerpAmount =
-            ((j / durationAnimation) * morphAttributes.length) % 1;
+          const nextMorph = (Math.floor((j / durationAnimation) * morphAttributes.length) + 1) % morphAttributes.length;
+          const lerpAmount = ((j / durationAnimation) * morphAttributes.length) % 1;
 
           if (j < durationAnimation) {
             let d0, d1;
 
             d0 = morphAttributes[curMorph].array[i * 3];
             d1 = morphAttributes[nextMorph].array[i * 3];
-            if (d0 !== undefined && d1 !== undefined)
-              tData[offset + i * 4] = Math.lerp(d0, d1, lerpAmount);
+            if (d0 !== undefined && d1 !== undefined) tData[offset + i * 4] = Math.lerp(d0, d1, lerpAmount);
 
             d0 = morphAttributes[curMorph].array[i * 3 + 1];
             d1 = morphAttributes[nextMorph].array[i * 3 + 1];
+            if (d0 !== undefined && d1 !== undefined) tData[offset + i * 4 + 1] = Math.lerp(d0, d1, lerpAmount);
 
-            if (d0 !== undefined && d1 !== undefined)
-              tData[offset + i * 4 + 1] = Math.lerp(d0, d1, lerpAmount);
             d0 = morphAttributes[curMorph].array[i * 3 + 2];
             d1 = morphAttributes[nextMorph].array[i * 3 + 2];
+            if (d0 !== undefined && d1 !== undefined) tData[offset + i * 4 + 2] = Math.lerp(d0, d1, lerpAmount);
 
-            if (d0 !== undefined && d1 !== undefined)
-              tData[offset + i * 4 + 2] = Math.lerp(d0, d1, lerpAmount);
             tData[offset + i * 4 + 3] = 1;
           }
         }
@@ -319,7 +313,7 @@ export class Birds {
         const x = (j % WIDTH) / WIDTH;
         const y = ~~(j / WIDTH) / WIDTH;
         reference.push(x, y, bIndex / tWidth, durationAnimation / tHeight);
-        seeds.push(bird, r, Math.random(), Math.random());
+        seeds.push(bird, r, Math.random(), Math.random() + 20);
       }
 
       for (let i = 0; i < birdGeo.index.array.length * BIRDS; i++) {
@@ -421,12 +415,15 @@ export class Birds {
     gui
       .add(effectController, "separation", 0.0, 100.0, 1.0)
       .onChange(valuesChanger);
+
     gui
       .add(effectController, "alignment", 0.0, 100, 0.001)
       .onChange(valuesChanger);
+
     gui
       .add(effectController, "cohesion", 0.0, 100, 0.025)
       .onChange(valuesChanger);
+      
     gui.add(effectController, "size", 0, 1, 0.01).onChange(valuesChanger);
     gui.add(effectController, "count", 0, BIRDS, 1).onChange(valuesChanger);
     gui.close();
@@ -558,8 +555,8 @@ export class Birds {
 
     birdMesh = new THREE.Mesh(geometry, m);
     birdMesh.rotation.y = Math.PI / 2;
-    birdMesh.castShadow = true;
-    birdMesh.receiveShadow = true;
+    // birdMesh.castShadow = true;
+    // birdMesh.receiveShadow = true;
     scene.add(birdMesh);
   }
 
@@ -606,7 +603,8 @@ export class Birds {
   }
 
   animate() {
-    requestAnimationFrame(that.animate);
+    // requestAnimationFrame(that.animate);
+    // Use "this" here:
     that.render();
     // stats.update();
   }

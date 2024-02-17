@@ -29,7 +29,7 @@ export class TerrainChunk {
     this._plane = new THREE.Mesh(this._geometry, params.material);
     this._plane.castShadow = false;
     this._plane.receiveShadow = true;
-    this._plane.frustumCulled = false;
+    // this._plane.frustumCulled = false;
     this._params.group.add(this._plane);
     this.Reinit(params);
   }

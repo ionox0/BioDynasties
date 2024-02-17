@@ -70,21 +70,21 @@ export class LoadController extends Component {
       this.models_[name].loader.load(name, (glb: any) => {
         this.models_[name].asset = glb;
 
-        glb.scene.traverse((c: { frustumCulled: boolean; }) => {
-          // HAHAHAH
-          c.frustumCulled = false;
-          // Apparently this doesn't work, so just disable frustum culling.
-          // Bugs... so many bugs...
+        // glb.scene.traverse((c: { frustumCulled: boolean; }) => {
+        //   // HAHAHAH
+        //   c.frustumCulled = false;
+        //   // Apparently this doesn't work, so just disable frustum culling.
+        //   // Bugs... so many bugs...
 
-          // if (c.geometry) {
-          //   // Just make our own, super crappy, super big box
-          //   c.geometry.boundingBox = new THREE.Box3(
-          //       new THREE.Vector3(-50, -50, -50),
-          //       new THREE.Vector3(50, 50, 50));
-          //   c.geometry.boundingSphere = new THREE.Sphere();
-          //   c.geometry.boundingBox.getBoundingSphere(c.geometry.boundingSphere);
-          // }
-        });
+        //   // if (c.geometry) {
+        //   //   // Just make our own, super crappy, super big box
+        //   //   c.geometry.boundingBox = new THREE.Box3(
+        //   //       new THREE.Vector3(-50, -50, -50),
+        //   //       new THREE.Vector3(50, 50, 50));
+        //   //   c.geometry.boundingSphere = new THREE.Sphere();
+        //   //   c.geometry.boundingBox.getBoundingSphere(c.geometry.boundingSphere);
+        //   // }
+        // });
 
         const queue = this.models_[name].queue;
         this.models_[name].queue = null;

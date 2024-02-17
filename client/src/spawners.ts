@@ -5,7 +5,6 @@ import { BasicCharacterController } from './player-entity'
 import { HealthComponent } from './health-component';
 import { BasicCharacterControllerInput } from './player-input';
 import { SpatialGridController } from './spatial-grid-controller';
-import { InventoryController, UIInventoryController } from './inventory-controller';
 import { EquipWeapon } from './equip-weapon-component';
 import { AttackController } from './attacker-controller';
 
@@ -39,8 +38,6 @@ export class PlayerSpawner extends Component {
     player.AddComponent(new BasicCharacterControllerInput(params));
     player.AddComponent(new BasicCharacterController(params));
     player.AddComponent(new EquipWeapon({desc: playerParams}));
-    player.AddComponent(new UIInventoryController());
-    player.AddComponent(new InventoryController());
 
     player.AddComponent(new HealthComponent({
         updateUI: true,
@@ -136,7 +133,6 @@ export class NetworkEntitySpawner extends Component {
 
     npc.AddComponent(
         new EquipWeapon({desc: desc}));
-    npc.AddComponent(new InventoryController());
     npc.AddComponent(new BloodEffect({
         camera: this.params_.camera,
         scene: this.params_.scene,

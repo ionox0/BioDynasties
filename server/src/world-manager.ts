@@ -106,7 +106,7 @@ export const world_manager = (() => {
     }
     
     Add(client: any, params: any) {
-      const models = ['sorceror', 'paladin'];
+      const models = ['beetle']; //'sorceror', 'paladin'];
       const randomClass = models[
           Math.floor(Math.random() * models.length)];
 

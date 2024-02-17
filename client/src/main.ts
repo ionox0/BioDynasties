@@ -7,7 +7,6 @@ import { UIController } from './ui-controller';
 import { NetworkController } from './network-controller';
 import { SceneryController } from './scenery-controller';
 import { LoadController } from './load-controller';
-import { InventoryDatabaseController } from './inventory-controller';
 import { ThreeJSController } from './threejs_component';
 
 import { LevelUpComponentSpawner } from './level-up-component';
@@ -15,10 +14,11 @@ import { PlayerSpawner, NetworkEntitySpawner } from './spawners';
 import { TerrainChunkManager } from './terrain';
 
 import { spatial_hash_grid } from '../shared/spatial-hash-grid';
-import { defs } from '../shared/defs';
 
 import { Birds } from './birds';
 
+
+let birdsObj: any;
 
 class CrappyMMOAttempt {
 
@@ -74,7 +74,7 @@ class CrappyMMOAttempt {
     threejs.AddComponent(mainController);
     this.entityManager_.Add(threejs, 'threejs');
 
-    const birdsObj = new Birds(mainController);
+    birdsObj = new Birds(mainController);
     birdsObj.loadBirds();
 
     // Hack
@@ -123,16 +123,6 @@ class CrappyMMOAttempt {
         camera: this.camera_,
     }));
     this.entityManager_.Add(spawner, 'spawners');
-
-    const database = new Entity();
-    database.AddComponent(new InventoryDatabaseController());
-    this.entityManager_.Add(database, 'database');
-
-    // HACK
-    for (let k in defs.WEAPONS_DATA) {
-      database.GetComponent('InventoryDatabaseController').AddItem(
-          k, defs.WEAPONS_DATA[k]);
-    }
   }
 
   LoadPlayer_() {

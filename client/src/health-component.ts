@@ -39,11 +39,11 @@ export class HealthComponent extends Component {
     const healthAsPercentage = this.stats_.health / this.stats_.maxHealth;
     bar.style.width = Math.floor(200 * healthAsPercentage) + 'px';
 
-    document.getElementById('stats-strength').innerText = this.stats_.strength;
-    document.getElementById('stats-wisdomness').innerText = this.stats_.wisdomness;
-    document.getElementById('stats-benchpress').innerText = this.stats_.benchpress;
-    document.getElementById('stats-curl').innerText = this.stats_.curl;
-    document.getElementById('stats-experience').innerText = this.stats_.experience;
+    // document.getElementById('stats-strength').innerText = this.stats_.strength;
+    // document.getElementById('stats-wisdomness').innerText = this.stats_.wisdomness;
+    // document.getElementById('stats-benchpress').innerText = this.stats_.benchpress;
+    // document.getElementById('stats-curl').innerText = this.stats_.curl;
+    // document.getElementById('stats-experience').innerText = this.stats_.experience;
   }
 
   _ComputeLevelXPRequirement() {
