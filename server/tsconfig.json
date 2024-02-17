@@ -1,0 +1,12 @@
+{
+    "include": ["index.ts", "src/**/*.ts"],
+    "compilerOptions": {
+      "outDir": "dist",
+      "noImplicitAny": true,
+      "module": "es6",
+      "target": "es6",
+      "allowJs": true,
+      "moduleResolution": "node",
+      "lib": ["webworker", "es5", "scripthost", "DOM"]
+    }
+  }

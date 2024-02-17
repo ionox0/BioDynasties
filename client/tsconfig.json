@@ -1,0 +1,13 @@
+{
+    "include": ["src/**/*.ts", "shared/**/*.ts", "src/birds.js"],
+    "compilerOptions": {
+      "outDir": "dist",
+      "noImplicitAny": true,
+      "module": "es6",
+      "target": "es5",
+      "jsx": "react",
+      "allowJs": true,
+      "moduleResolution": "node",
+      "lib": ["webworker", "es5", "scripthost", "DOM"]
+    }
+  }
