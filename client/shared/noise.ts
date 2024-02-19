@@ -6,7 +6,7 @@ export class NoiseGenerator {
   _params: any;
   _noise: any;
 
-  constructor(params: { octaves: number; persistence: number; lacunarity: number; exponentiation: number; height: number; scale: number; seed: number; }) {
+  constructor(params: any) {
     this._params = params;
     this._Init();
   }

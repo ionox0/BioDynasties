@@ -223,18 +223,25 @@ const BOUNDS_HALF = BOUNDS / 2;
 let gpuCompute: any;
 let velocityVariable: any;
 let positionVariable: any;
-let positionUniforms: any;
-let velocityUniforms: any;
 
 let last = performance.now();
 let that;
 
 export class Birds {
+
+  positionUniforms: any;
+  velocityUniforms: any
+
   constructor(mainC) {
+    this.positionUniforms = null;
+    this.velocityUniforms = null;
+
     mainController = mainC;
     renderer = mainC.threejs_;
     camera = mainC.camera_;
     scene = mainC.scene_;
+
+    this.initComputeRenderer();
   }
 
   nextPowerOf2(n) {
@@ -349,7 +356,7 @@ export class Birds {
       BirdGeometry.setIndex(indices);
 
       that.init();
-      that.animate();
+      // that.animate();
     });
   }
 
@@ -382,7 +389,7 @@ export class Birds {
     // renderer.setSize( window.innerWidth, window.innerHeight );
     // container.appendChild( renderer.domElement );
 
-    this.initComputeRenderer();
+    // this.initComputeRenderer();
 
     // stats = new Stats();
     // container.appendChild( stats.dom );
@@ -401,11 +408,11 @@ export class Birds {
     };
 
     const valuesChanger = function () {
-      velocityUniforms["separationDistance"].value =
+      that.velocityUniforms["separationDistance"].value =
         effectController.separation;
-      velocityUniforms["alignmentDistance"].value = effectController.alignment;
-      velocityUniforms["cohesionDistance"].value = effectController.cohesion;
-      velocityUniforms["freedomFactor"].value = effectController.freedom;
+      that.velocityUniforms["alignmentDistance"].value = effectController.alignment;
+      that.velocityUniforms["cohesionDistance"].value = effectController.cohesion;
+      that.velocityUniforms["freedomFactor"].value = effectController.freedom;
       if (materialShader)
         materialShader.uniforms["size"].value = effectController.size;
       BirdGeometry.setDrawRange(0, indicesPerBird * effectController.count);
@@ -461,19 +468,19 @@ export class Birds {
       velocityVariable,
     ]);
 
-    positionUniforms = positionVariable.material.uniforms;
-    velocityUniforms = velocityVariable.material.uniforms;
+    this.positionUniforms = positionVariable.material.uniforms;
+    this.velocityUniforms = velocityVariable.material.uniforms;
 
-    positionUniforms["time"] = { value: 0.0 };
-    positionUniforms["delta"] = { value: 0.0 };
-    velocityUniforms["time"] = { value: 1.0 };
-    velocityUniforms["delta"] = { value: 0.0 };
-    velocityUniforms["testing"] = { value: 1.0 };
-    velocityUniforms["separationDistance"] = { value: 1.0 };
-    velocityUniforms["alignmentDistance"] = { value: 1.0 };
-    velocityUniforms["cohesionDistance"] = { value: 1.0 };
-    velocityUniforms["freedomFactor"] = { value: 1.0 };
-    velocityUniforms["predator"] = { value: new THREE.Vector3() };
+    this.positionUniforms["time"] = { value: 0.0 };
+    this.positionUniforms["delta"] = { value: 0.0 };
+    this.velocityUniforms["time"] = { value: 1.0 };
+    this.velocityUniforms["delta"] = { value: 0.0 };
+    this.velocityUniforms["testing"] = { value: 1.0 };
+    this.velocityUniforms["separationDistance"] = { value: 1.0 };
+    this.velocityUniforms["alignmentDistance"] = { value: 1.0 };
+    this.velocityUniforms["cohesionDistance"] = { value: 1.0 };
+    this.velocityUniforms["freedomFactor"] = { value: 1.0 };
+    this.velocityUniforms["predator"] = { value: new THREE.Vector3() };
     velocityVariable.material.defines.BOUNDS = BOUNDS.toFixed(2);
 
     velocityVariable.wrapS = THREE.RepeatWrapping;
@@ -602,12 +609,12 @@ export class Birds {
     // mouseY = event.clientY - windowHalfY;
   }
 
-  animate() {
-    // requestAnimationFrame(that.animate);
-    // Use "this" here:
-    that.render();
-    // stats.update();
-  }
+  // animate() {
+  //   requestAnimationFrame(that.animate);
+  //   // Use "this" here:
+  //   that.render();
+  //   // stats.update();
+  // }
 
   render() {
     const now = performance.now();
@@ -616,16 +623,16 @@ export class Birds {
     if (delta > 1) delta = 1; // safety cap on large deltas
     last = now;
 
-    positionUniforms["time"].value = now;
-    positionUniforms["delta"].value = delta;
-    velocityUniforms["time"].value = now;
-    velocityUniforms["delta"].value = delta;
+    this.positionUniforms["time"].value = now;
+    this.positionUniforms["delta"].value = delta;
+    this.velocityUniforms["time"].value = now;
+    this.velocityUniforms["delta"].value = delta;
     if (materialShader) materialShader.uniforms["time"].value = now / 1000;
     if (materialShader) materialShader.uniforms["delta"].value = delta;
 
     mouseX = 10000;
     mouseY = 10000;
-    velocityUniforms["predator"].value.set(
+    this.velocityUniforms["predator"].value.set(
       (0.5 * mouseX) / windowHalfX,
       (-0.5 * mouseY) / windowHalfY,
       0

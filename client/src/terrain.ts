@@ -72,31 +72,33 @@ export class TerrainChunkManager extends Component {
       vertexColors: true,
     });
 
-    this._material.onBeforeCompile = (s: any) => {
-      let a = 0;
-      let vsh = s.vertexShader;
-      vsh = terrain_shader.VS1 + s.vertexShader;
-      const vi1 = vsh.search('#include <fog_vertex>');
-      vsh = [vsh.slice(0, vi1) + terrain_shader.VS2 + vsh.slice(vi1)].join('');
-      s.vertexShader = vsh;
+    // Todo: why does this make it so slow?
+    //
+    // this._material.onBeforeCompile = (s: any) => {
+    //   let a = 0;
+    //   let vsh = s.vertexShader;
+    //   vsh = terrain_shader.VS1 + s.vertexShader;
+    //   const vi1 = vsh.search('#include <fog_vertex>');
+    //   vsh = [vsh.slice(0, vi1) + terrain_shader.VS2 + vsh.slice(vi1)].join('');
+    //   s.vertexShader = vsh;
 
-      s.fragmentShader = terrain_shader.PS1 + s.fragmentShader;
-      const fi1 = s.fragmentShader.search('#include <lights_physical_fragment>');
-      s.fragmentShader = [s.fragmentShader.slice(0, fi1) + terrain_shader.PS2 + s.fragmentShader.slice(fi1)].join('');
+    //   s.fragmentShader = terrain_shader.PS1 + s.fragmentShader;
+    //   const fi1 = s.fragmentShader.search('#include <lights_physical_fragment>');
+    //   s.fragmentShader = [s.fragmentShader.slice(0, fi1) + terrain_shader.PS2 + s.fragmentShader.slice(fi1)].join('');
 
-      s.uniforms.TRIPLANAR_normalMap = {value: normal.Info['normal'].atlas};
-      s.uniforms.TRIPLANAR_diffuseMap = {value: diffuse.Info['diffuse'].atlas};
-      s.uniforms.TRIPLANAR_noiseMap = {value: noiseTexture};
+    //   s.uniforms.TRIPLANAR_normalMap = {value: normal.Info['normal'].atlas};
+    //   s.uniforms.TRIPLANAR_diffuseMap = {value: diffuse.Info['diffuse'].atlas};
+    //   s.uniforms.TRIPLANAR_noiseMap = {value: noiseTexture};
 
-      diffuse.onLoad = () => {     
-        s.uniforms.TRIPLANAR_diffuseMap.value = diffuse.Info['diffuse'].atlas;
-      };
-      normal.onLoad = () => {     
-        s.uniforms.TRIPLANAR_normalMap.value = normal.Info['normal'].atlas;
-      };
+    //   diffuse.onLoad = () => {     
+    //     s.uniforms.TRIPLANAR_diffuseMap.value = diffuse.Info['diffuse'].atlas;
+    //   };
+    //   normal.onLoad = () => {     
+    //     s.uniforms.TRIPLANAR_normalMap.value = normal.Info['normal'].atlas;
+    //   };
 
-      // s.fragmentShader += 'poop';
-    };
+    //   // s.fragmentShader += 'poop';
+    // };
 
     this._builder = new TerrainChunkRebuilder_Threaded(params);
     // this._builder = new TerrainChunkRebuilder();
@@ -220,7 +222,7 @@ export class TerrainChunkManager extends Component {
 
     this._builder.Update();
     if (!this._builder.Busy) {
-      // this._UpdateVisibleChunks_Quadtree(target);
+      this._UpdateVisibleChunks_Quadtree(target);
     }
 
     for (let k in this._chunks) {

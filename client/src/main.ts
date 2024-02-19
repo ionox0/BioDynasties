@@ -155,6 +155,8 @@ class CrappyMMOAttempt {
       this.Step_(t - this.previousRAF_);
       this.previousRAF_ = t;
 
+      birdsObj.render();
+
       setTimeout(() => {
         this.RAF_();
       }, 1);
