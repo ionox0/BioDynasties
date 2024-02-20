@@ -85,17 +85,11 @@ export const world_manager = (() => {
       this.tickTimer_ = 0.0;
 
       // Hack
-      for (let x = -1; x <= 1; ++x) {
-        for (let z = -1; z <= 1; ++z) {
-          if (Math.random() < 0.9) {
-            const pos = vec3.fromValues(x * 5, 0, z * 5);
-            if (Math.random() < 0.5) {
-              this.spawners_.push(new MonsterSpawner({
-                parent: this, pos: pos, class: 'spider'}));
-            } else {
-              this.spawners_.push(new MonsterSpawner({
-                parent: this, pos: pos, class: 'spider'}));
-            }
+      for (let x = 0; x < 1; ++x) {
+        for (let z = 0; z < 1; ++z) {
+          if (Math.random() < 0.99) {
+              const pos = vec3.fromValues(5, 0, 5);
+              this.spawners_.push(new MonsterSpawner({parent: this, pos: pos, class: 'spider'}));
           }
         }
       }
@@ -107,8 +101,7 @@ export const world_manager = (() => {
     
     Add(client: any, params: any) {
       const models = ['beetle']; //'sorceror', 'paladin'];
-      const randomClass = models[
-          Math.floor(Math.random() * models.length)];
+      const randomClass = models[Math.floor(Math.random() * models.length)];
 
       // Hack
       const e = new world_entity.WorldEntity({

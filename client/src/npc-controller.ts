@@ -18,10 +18,12 @@ export class NPCController extends Component {
   bones_: any;
   mixer_: any;
   objMesh: THREE.InstancedMesh<any, any>;
+  instanceCount_: number;
 
   constructor(params: any) {
     super();
     this.params_ = params;
+    this.instanceCount_ = 30;
   }
 
   Destroy() {
@@ -85,19 +87,19 @@ export class NPCController extends Component {
   }
 
   OnPosition_(m: { value: any; }) {
+    if (this.group_.position.equals(m.value)) return;
     this.group_.position.copy(m.value);
 
+    // Update relative instance positions
     if (this.objMesh === null || this.objMesh === undefined) return;
-    
     const dummy: any = new THREE.Object3D();
     const matrix = new THREE.Matrix4();
-    for(let i = 0; i < 30; i++) {
+    for(let i = 0; i < this.instanceCount_; i++) {
       this.objMesh.getMatrixAt(i, matrix);
       matrix.decompose(dummy.position, dummy.rotation, dummy.scale);
-
+      // Todo: look into group pathing algorithms
       dummy.position.x = math.smootherstep(0.1, dummy.position.x, dummy.position.x + Math.random() - 0.5);
       dummy.position.z = math.smootherstep(0.5, dummy.position.z, dummy.position.z + Math.random() - 0.5);
-      
       dummy.updateMatrix();
       this.objMesh.setMatrixAt(i, dummy.matrix);
     }
@@ -105,7 +107,19 @@ export class NPCController extends Component {
   }
 
   OnRotation_(m: { value: any; }) {
-    this.group_.quaternion.copy(m.value);
+    // Update relative instance positions
+    if (this.objMesh === null || this.objMesh === undefined) return;
+    // Todo: should have a separate InstancedNPCController Component
+    const dummy: any = new THREE.Object3D();
+    const matrix = new THREE.Matrix4();
+    for(let i = 0; i < this.instanceCount_; i++) {
+      this.objMesh.getMatrixAt(i, matrix);
+      matrix.decompose(dummy.position, dummy.rotation, dummy.scale);
+      dummy.rotation.setFromQuaternion(m.value);
+      dummy.updateMatrix();
+      this.objMesh.setMatrixAt(i, dummy.matrix);
+    }
+    this.objMesh.instanceMatrix.needsUpdate = true;
   }
 
   LoadModels_() {
@@ -120,23 +134,8 @@ export class NPCController extends Component {
 
       // todo: is the group useful here?
       // this.group_.add(this.target_);
-      
-      // Instancing
-      const mesh = this.target_.getObjectByName("Cube001_1");
-      const geometry = mesh.geometry.clone();
-      const material = mesh.material;
-      this.objMesh = new THREE.InstancedMesh(geometry, material, 10000);
-      this.group_.add(this.objMesh);
 
-      const dummy = new THREE.Object3D();
-      for(let i = 0; i < 30; i++) {
-        dummy.position.x = Math.random() * 10 - 20;
-        dummy.position.z = Math.random() * 10 - 20;
-        dummy.scale.x = dummy.scale.y = dummy.scale.z = 0.2 * Math.random();
-        dummy.updateMatrix();
-        this.objMesh.setMatrixAt(i, dummy.matrix);
-        this.objMesh.setColorAt(i, new THREE.Color(Math.random() * 0xFFFFFF));
-      }
+      this.AddInstancing();
 
       this.bones_ = {};
       this.target_.traverse((c: { skeleton: { bones: any; }; }) => {
@@ -208,6 +207,24 @@ export class NPCController extends Component {
           bones: this.bones_,
       });
     });
+  }
+
+  AddInstancing() {
+      const mesh = this.target_.getObjectByName("Cube001_1");
+      const geometry = mesh.geometry.clone();
+      const material = mesh.material;
+      this.objMesh = new THREE.InstancedMesh(geometry, material, 10000);
+      this.group_.add(this.objMesh);
+
+      const dummy = new THREE.Object3D();
+      for(let i = 0; i < this.instanceCount_; i++) {
+        dummy.position.x = Math.random() * 10 - 5;
+        dummy.position.z = Math.random() * 10 - 5;
+        dummy.scale.x = dummy.scale.y = dummy.scale.z = 0.3 * Math.random();
+        dummy.updateMatrix();
+        this.objMesh.setMatrixAt(i, dummy.matrix);
+        this.objMesh.setColorAt(i, new THREE.Color(Math.random() * 0xFFFFFF));
+      }
   }
 
   Update(timeInSeconds: any) {
