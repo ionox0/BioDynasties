@@ -15,10 +15,10 @@ import { TerrainChunkManager } from './terrain';
 
 import { spatial_hash_grid } from '../shared/spatial-hash-grid';
 
-import { Birds } from './birds';
+// import { Birds } from './birds';
 
 
-let birdsObj: any;
+// let birdsObj: any;
 
 class CrappyMMOAttempt {
 
@@ -74,8 +74,8 @@ class CrappyMMOAttempt {
     threejs.AddComponent(mainController);
     this.entityManager_.Add(threejs, 'threejs');
 
-    birdsObj = new Birds(mainController);
-    birdsObj.loadBirds();
+    // birdsObj = new Birds(mainController);
+    // birdsObj.loadBirds();
 
     // Hack
     this.scene_ = threejs.GetComponent('ThreeJSController').scene_;
@@ -155,7 +155,7 @@ class CrappyMMOAttempt {
       this.Step_(t - this.previousRAF_);
       this.previousRAF_ = t;
 
-      birdsObj.render();
+      // birdsObj.render();
 
       setTimeout(() => {
         this.RAF_();

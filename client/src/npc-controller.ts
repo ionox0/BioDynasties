@@ -9,13 +9,14 @@ import { defs } from '../shared/defs';
 export class NPCController extends Component {
   
   params_: any;
-  group_: any;
+  group_: THREE.Group;
   animations_: {[x: string]: any};
   queuedState_: any;
   stateMachine_: any;
   target_: any;
   bones_: any;
   mixer_: any;
+  starMesh: THREE.InstancedMesh<any, any>;
 
   constructor(params: any) {
     super();
@@ -95,12 +96,33 @@ export class NPCController extends Component {
     const modelData = defs.CHARACTER_MODELS[classType];
 
     const loader = this.FindEntity('loader').GetComponent('LoadController');
-    loader.LoadSkinnedGLB(modelData.path, modelData.base, (glb: any) => {
+
+    const path = './resources/bugs/spider/';
+    const base = 'spider_small.glb';
+    loader.LoadSkinnedGLB(path, base, (glb: any) => {
       this.target_ = glb.scene;
       this.target_.scale.setScalar(modelData.scale);
       this.target_.visible = false;
 
-      this.group_.add(this.target_);
+      // todo: is the group useful here?
+      // this.group_.add(this.target_);
+      
+      // Instancing
+      const mesh = this.target_.getObjectByName("Cube001_1");
+      const geometry = mesh.geometry.clone();
+      const material = mesh.material;
+      this.starMesh = new THREE.InstancedMesh(geometry, material, 10000);
+      this.group_.add(this.starMesh);
+
+      const dummy = new THREE.Object3D();
+      for(let i = 0; i < 3; i++) {
+          dummy.position.x = Math.random() * 40 - 20;
+          dummy.position.z = Math.random() * 40 - 20;
+          dummy.scale.x = dummy.scale.y = dummy.scale.z = 0.3 * Math.random();
+          dummy.updateMatrix();
+          this.starMesh.setMatrixAt(i, dummy.matrix);
+          this.starMesh.setColorAt(i, new THREE.Color(Math.random() * 0xFFFFFF));
+      }
 
       this.bones_ = {};
       this.target_.traverse((c: { skeleton: { bones: any; }; }) => {
@@ -144,6 +166,7 @@ export class NPCController extends Component {
       this.animations_['attack'] = _FindAnim('Attack');
       this.animations_['dance'] = _FindAnim('Dance');
 
+      // todo: hack until i figure out how to make / rename animations in blender
       if (this.animations_['idle'] == undefined || this.animations_['idle'] == null) {
         this.animations_['idle'] = _FindAnim('Attack');
         this.animations_['walk'] = _FindAnim('Attack');

@@ -73,7 +73,6 @@ export class TerrainChunkManager extends Component {
     });
 
     // Todo: why does this make it so slow?
-    //
     // this._material.onBeforeCompile = (s: any) => {
     //   let a = 0;
     //   let vsh = s.vertexShader;
@@ -101,7 +100,6 @@ export class TerrainChunkManager extends Component {
     // };
 
     this._builder = new TerrainChunkRebuilder_Threaded(params);
-    // this._builder = new TerrainChunkRebuilder();
 
     this._InitNoise();
     this._InitBiomes(params);
