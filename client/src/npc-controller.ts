@@ -4,6 +4,7 @@ import { Component } from './entity';
 import { BasicCharacterControllerProxy, CharacterFSM} from './player-entity'
 
 import { defs } from '../shared/defs';
+import { math } from '../shared/math';
 
 
 export class NPCController extends Component {
@@ -16,7 +17,7 @@ export class NPCController extends Component {
   target_: any;
   bones_: any;
   mixer_: any;
-  starMesh: THREE.InstancedMesh<any, any>;
+  objMesh: THREE.InstancedMesh<any, any>;
 
   constructor(params: any) {
     super();
@@ -85,6 +86,22 @@ export class NPCController extends Component {
 
   OnPosition_(m: { value: any; }) {
     this.group_.position.copy(m.value);
+
+    if (this.objMesh === null || this.objMesh === undefined) return;
+    
+    const dummy: any = new THREE.Object3D();
+    const matrix = new THREE.Matrix4();
+    for(let i = 0; i < 30; i++) {
+      this.objMesh.getMatrixAt(i, matrix);
+      matrix.decompose(dummy.position, dummy.rotation, dummy.scale);
+
+      dummy.position.x = math.smootherstep(0.1, dummy.position.x, dummy.position.x + Math.random() - 0.5);
+      dummy.position.z = math.smootherstep(0.5, dummy.position.z, dummy.position.z + Math.random() - 0.5);
+      
+      dummy.updateMatrix();
+      this.objMesh.setMatrixAt(i, dummy.matrix);
+    }
+    this.objMesh.instanceMatrix.needsUpdate = true;
   }
 
   OnRotation_(m: { value: any; }) {
@@ -96,10 +113,7 @@ export class NPCController extends Component {
     const modelData = defs.CHARACTER_MODELS[classType];
 
     const loader = this.FindEntity('loader').GetComponent('LoadController');
-
-    const path = './resources/bugs/spider/';
-    const base = 'spider_small.glb';
-    loader.LoadSkinnedGLB(path, base, (glb: any) => {
+    loader.LoadSkinnedGLB(modelData.path, modelData.base, (glb: any) => {
       this.target_ = glb.scene;
       this.target_.scale.setScalar(modelData.scale);
       this.target_.visible = false;
@@ -111,17 +125,17 @@ export class NPCController extends Component {
       const mesh = this.target_.getObjectByName("Cube001_1");
       const geometry = mesh.geometry.clone();
       const material = mesh.material;
-      this.starMesh = new THREE.InstancedMesh(geometry, material, 10000);
-      this.group_.add(this.starMesh);
+      this.objMesh = new THREE.InstancedMesh(geometry, material, 10000);
+      this.group_.add(this.objMesh);
 
       const dummy = new THREE.Object3D();
-      for(let i = 0; i < 3; i++) {
-          dummy.position.x = Math.random() * 40 - 20;
-          dummy.position.z = Math.random() * 40 - 20;
-          dummy.scale.x = dummy.scale.y = dummy.scale.z = 0.3 * Math.random();
-          dummy.updateMatrix();
-          this.starMesh.setMatrixAt(i, dummy.matrix);
-          this.starMesh.setColorAt(i, new THREE.Color(Math.random() * 0xFFFFFF));
+      for(let i = 0; i < 30; i++) {
+        dummy.position.x = Math.random() * 10 - 20;
+        dummy.position.z = Math.random() * 10 - 20;
+        dummy.scale.x = dummy.scale.y = dummy.scale.z = 0.2 * Math.random();
+        dummy.updateMatrix();
+        this.objMesh.setMatrixAt(i, dummy.matrix);
+        this.objMesh.setColorAt(i, new THREE.Color(Math.random() * 0xFFFFFF));
       }
 
       this.bones_ = {};

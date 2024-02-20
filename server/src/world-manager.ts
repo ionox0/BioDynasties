@@ -85,9 +85,9 @@ export const world_manager = (() => {
       this.tickTimer_ = 0.0;
 
       // Hack
-      for (let x = -5; x <= 5; ++x) {
-        for (let z = -5; z <= 5; ++z) {
-          if (Math.random() < 0.1) {
+      for (let x = -1; x <= 1; ++x) {
+        for (let z = -1; z <= 1; ++z) {
+          if (Math.random() < 0.9) {
             const pos = vec3.fromValues(x * 5, 0, z * 5);
             if (Math.random() < 0.5) {
               this.spawners_.push(new MonsterSpawner({
