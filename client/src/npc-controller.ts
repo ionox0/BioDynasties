@@ -23,7 +23,7 @@ export class NPCController extends Component {
   }
 
   Destroy() {
-    this.group_.traverse((c: { material: any; geometry: { dispose: () => void; }; }) => {
+    this.group_.traverse((c: any) => {
       if (c.material) {
         let materials = c.material;
         if (!(c.material instanceof Array)) {
@@ -95,7 +95,7 @@ export class NPCController extends Component {
     const modelData = defs.CHARACTER_MODELS[classType];
 
     const loader = this.FindEntity('loader').GetComponent('LoadController');
-    loader.LoadSkinnedGLB(modelData.path, modelData.base, (glb: { scene: any; animations: string | any[]; }) => {
+    loader.LoadSkinnedGLB(modelData.path, modelData.base, (glb: any) => {
       this.target_ = glb.scene;
       this.target_.scale.setScalar(modelData.scale);
       this.target_.visible = false;
@@ -112,7 +112,7 @@ export class NPCController extends Component {
         }
       });
 
-      this.target_.traverse((c: { castShadow: boolean; receiveShadow: boolean; material: { map: { encoding: any; }; }; }) => {
+      this.target_.traverse((c: any) => {
         c.castShadow = true;
         c.receiveShadow = true;
         if (c.material && c.material.map) {
