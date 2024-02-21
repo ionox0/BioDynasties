@@ -16,26 +16,6 @@ export class UIController extends Component {
   }
 
   InitComponent() {
-    // this.iconBar_ = {
-    //   stats: document.getElementById('icon-bar-stats'),
-    //   inventory: document.getElementById('icon-bar-inventory'),
-    //   quests: document.getElementById('icon-bar-quests'),
-    // };
-
-    // this._ui = {
-    //   inventory: document.getElementById('inventory'),
-    //   stats: document.getElementById('stats'),
-    //   quests: document.getElementById('quest-journal'),
-    // };
-
-    // const e = document.getElementById('quest-ui');
-    // e.style.visibility = 'hidden';
-
-    // this.iconBar_.inventory.onclick = (m: MouseEvent) => { this.OnInventoryClicked_(m); };
-    // this.iconBar_.stats.onclick = (m: MouseEvent) => { this.OnStatsClicked_(m); };
-    // this.iconBar_.quests.onclick = (m: MouseEvent) => { this.OnQuestsClicked_(m); };
-    // this.HideUI_();
-
     this.chatElement_ = document.getElementById('chat-input');
     this.chatElement_.addEventListener('keydown', (e: KeyboardEvent) => this.OnChatKeyDown_(e), false);
   }
@@ -62,24 +42,6 @@ export class UIController extends Component {
       this.chatElement_.value = '';
     }
     evt.stopPropagation();
-  }
-
-  AddQuest(quest: { id: string; title: string; }) {
-    if (quest.id in this._quests) {
-      return;
-    }
-
-    const e = document.createElement('DIV');
-    e.className = 'quest-entry';
-    e.id = 'quest-entry-' + quest.id;
-    e.innerText = quest.title;
-    e.onclick = (evt) => {
-      this.OnQuestSelected_(e.id);
-    };
-    document.getElementById('quest-journal').appendChild(e);
-
-    this._quests[quest.id] = quest;
-    this.OnQuestSelected_(quest.id);
   }
 
   AddEventMessages(events: any) {
@@ -117,43 +79,7 @@ export class UIController extends Component {
     chatElement.insertBefore(e, document.getElementById('chat-input'));
   }
 
-  OnQuestSelected_(id: string) {
-    const quest = this._quests[id];
+  HideUI_() {}
 
-    const e = document.getElementById('quest-ui');
-    e.style.visibility = '';
-
-    const text = document.getElementById('quest-text');
-    text.innerText = quest.text;
-
-    const title = document.getElementById('quest-text-title');
-    title.innerText = quest.title;
-  }
-
-  HideUI_() {
-    // this._ui.inventory.style.visibility = 'hidden';
-    // this._ui.stats.style.visibility = 'hidden';
-    // this._ui.quests.style.visibility = 'hidden';
-  }
-  
-  OnQuestsClicked_(msg: MouseEvent) {
-    const visibility = this._ui.quests.style.visibility;
-    this.HideUI_();
-    this._ui.quests.style.visibility = (visibility ? '' : 'hidden');
-  }
-
-  OnStatsClicked_(msg: MouseEvent) {
-    const visibility = this._ui.stats.style.visibility;
-    this.HideUI_();
-    this._ui.stats.style.visibility = (visibility ? '' : 'hidden');
-  }
-
-  OnInventoryClicked_(msg: MouseEvent) {
-    const visibility = this._ui.inventory.style.visibility;
-    this.HideUI_();
-    this._ui.inventory.style.visibility = (visibility ? '' : 'hidden');
-  }
-
-  Update(timeInSeconds: any) {
-  }
+  Update(timeInSeconds: any) {}
 };
