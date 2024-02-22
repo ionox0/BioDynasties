@@ -52,7 +52,7 @@ export class HealthBar extends Component {
         value: 1.0,
       },
     };
-    this.material_ = new THREE.ShaderMaterial( {
+    this.material_ = new THREE.MeshBasicMaterial( {
       uniforms: uniforms,
       vertexShader: _VS,
       fragmentShader: _PS,

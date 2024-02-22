@@ -228,7 +228,7 @@ export class ParticleSystem {
         }
     };
 
-    this.material_ = new THREE.ShaderMaterial({
+    this.material_ = new THREE.MeshBasicMaterial({
         uniforms: uniforms,
         vertexShader: _VS,
         fragmentShader: _FS,
