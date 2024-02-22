@@ -88,7 +88,7 @@ export const world_manager = (() => {
       for (let x = 0; x < 1; ++x) {
         for (let z = 0; z < 1; ++z) {
           if (Math.random() < 0.99) {
-              const pos = vec3.fromValues(5, 0, 5);
+              const pos = vec3.fromValues(x * 10, 0, z * 10);
               this.spawners_.push(new MonsterSpawner({parent: this, pos: pos, class: 'spider'}));
           }
         }

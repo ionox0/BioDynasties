@@ -2,8 +2,6 @@ import * as THREE from '../../../three.js';
 
 import { Component } from "./entity";
 import WebGPURenderer from '../../../three.js/examples/jsm/renderers/webgpu/WebGPURenderer.js';
-import PostProcessing from '../../../three.js/examples/jsm/renderers/common/PostProcessing.js';
-import { pass } from '../../../three.js/examples/jsm/nodes/Nodes';
 
 
 const _VS = `
@@ -46,7 +44,6 @@ export class ThreeJSController extends Component {
   camera_: any;
   scene_: any;
   sun_: any;
-  postProcessing: PostProcessing;
 
   constructor() {
     super();
@@ -117,35 +114,11 @@ export class ThreeJSController extends Component {
     this.camera_.position.set(-25, 10, 25);
 
     this.scene_ = new THREE.Scene();
-
-
-    const scenePass = pass(this.scene_, this.camera_);
-    const scenePassColor = scenePass.getTextureNode();
-    const scenePassDepth = scenePass.getDepthNode().remapClamp(0.15, 0.3);
-
-    const scenePassColorBlurred = scenePassColor.gaussianBlur();
-    scenePassColorBlurred.directionNode = scenePassDepth;
-
-    this.postProcessing = new PostProcessing(this.threejs_);
-    this.postProcessing.outputNode = scenePassColorBlurred;
-
-    // lights
-    const centerLight = new THREE.PointLight( 0xff9900, 1, 100 );
-    // centerLight.position.y = 4.5;
-    // centerLight.position.z = - 2;
-    centerLight.power = 400;
-    this.scene_.add( centerLight );
-
-    const cameraLight = new THREE.PointLight( 0x0099ff, 1, 100 );
-    cameraLight.power = 400;
-    this.camera_.add( cameraLight );
-
-
     this.scene_.fog = new THREE.FogExp2(0x89b2eb, 0.00002);
 
     let light = new THREE.DirectionalLight(0x8088b3, 0.7);
-    // light.position.set(-10, 500, 10);
-    // light.target.position.set(0, 0, 0);
+    light.position.set(-10, 500, 10);
+    light.target.position.set(0, 0, 0);
     // Note: shadows destroy performance of GPU birds
     // light.castShadow = true;
     light.shadow.bias = -0.001;
@@ -168,8 +141,8 @@ export class ThreeJSController extends Component {
 
   LoadSky_() {
     const hemiLight = new THREE.HemisphereLight(0x424a75, 0x6a88b5, 0.7);
-    // hemiLight.color.setHSL(0.6, 1, 0.4);
-    // hemiLight.groundColor.setHSL(0.095, 1, 0.5);
+    hemiLight.color.setHSL(0.6, 1, 0.4);
+    hemiLight.groundColor.setHSL(0.095, 1, 0.5);
     this.scene_.add(hemiLight);
 
 

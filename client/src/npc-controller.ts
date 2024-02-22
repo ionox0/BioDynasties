@@ -13,20 +13,20 @@ export class NPCController extends Component {
   mixer: THREE.AnimationMixer;
   clock: any;
   params_: any;
-  group_: THREE.Group;
+  group_: any;
   animations_: {[x: string]: any};
   queuedState_: any;
   stateMachine_: any;
   target_: any;
   bones_: any;
   mixer_: any;
-  objMesh: any;
   instanceCount_: number;
+  mesh: any;
 
   constructor(params: any) {
     super();
     this.params_ = params;
-    this.instanceCount_ = 3;
+    this.instanceCount_ = 10;
   }
 
   Destroy() {
@@ -93,43 +93,46 @@ export class NPCController extends Component {
 
   OnPosition_(m: { value: any; }) {
     this.group_.position.copy(m.value);
-    // this.RepositionInstances(m);
+    this.RepositionInstances(m);
   }
 
   RepositionInstances(m: any) {
     return;
     // Update relative instance positions
     // Todo: need a separate InstancedEntity class
-    if (this.objMesh === null || this.objMesh === undefined) return;
+    if (this.mesh === null || this.mesh === undefined) return;
     const dummy: any = new THREE.Object3D();
     const matrix = new THREE.Matrix4();
     for(let i = 0; i < this.instanceCount_; i++) {
-      this.objMesh.getMatrixAt(i, matrix);
+      this.mesh.getMatrixAt(i, matrix);
       matrix.decompose(dummy.position, dummy.rotation, dummy.scale);
       // Todo: look into group pathing algorithms
       dummy.position.x = math.smootherstep(0.4, dummy.position.x, dummy.position.x + Math.random() - 0.5);
       dummy.position.z = math.smootherstep(0.4, dummy.position.z, dummy.position.z + Math.random() - 0.5);
       dummy.updateMatrix();
-      this.objMesh.setMatrixAt(i, dummy.matrix);
+      this.mesh.setMatrixAt(i, dummy.matrix);
     }
-    this.objMesh.instanceMatrix.needsUpdate = true;
+    this.mesh.instanceMatrix.needsUpdate = true;
   }
 
   OnRotation_(m: { value: any; }) {
+    this.group_.rotation.setFromQuaternion(m.value);
     return;
+    // Todo: should just have 1 handler for position + rotation
     // Update relative instance positions
-    if (this.objMesh === null || this.objMesh === undefined) return;
-    // Todo: should have a separate InstancedNPCController Component
-    const dummy: any = new THREE.Object3D();
-    const matrix = new THREE.Matrix4();
-    for(let i = 0; i < this.instanceCount_; i++) {
-      this.objMesh.getMatrixAt(i, matrix);
-      matrix.decompose(dummy.position, dummy.rotation, dummy.scale);
-      dummy.rotation.setFromQuaternion(m.value);
-      dummy.updateMatrix();
-      this.objMesh.setMatrixAt(i, dummy.matrix);
+    // Todo: can not get this to work...
+    if (this.mesh === null || this.mesh === undefined) return;
+    var matrixSize = 16;
+    for (var i = 0; i < this.instanceCount_; i++) {
+      var newMatrix: any = new THREE.Matrix4();
+      newMatrix.makeRotationFromQuaternion(m.value);
+      var offset = i * matrixSize;
+      for (var j = 0; j < matrixSize; j++) {
+        this.mesh.instanceMatrix.array[offset + j] = newMatrix.elements[j];
+      }
     }
-    this.objMesh.instanceMatrix.needsUpdate = true;
+    this.mesh.material.needsUpdate = true;
+    this.mesh.instanceMatrix.needsUpdate = true;
   }
 
   animate() {
@@ -176,7 +179,6 @@ export class NPCController extends Component {
       });
 
       this.mixer_ = new THREE.AnimationMixer(this.target_);
-
       
       const _FindAnim = (animName: string) => {
         for (let i = 0; i < glb.animations.length; i++) {
@@ -192,21 +194,21 @@ export class NPCController extends Component {
         return null;
       };
 
-      this.animations_['idle'] = _FindAnim('Idle');
-      this.animations_['walk'] = _FindAnim('Walk');
-      this.animations_['run'] = _FindAnim('Run');
-      this.animations_['death'] = _FindAnim('Death');
-      this.animations_['attack'] = _FindAnim('Attack');
-      this.animations_['dance'] = _FindAnim('Dance');
+      this.animations_['idle'] = _FindAnim('TPose');
+      this.animations_['walk'] = _FindAnim('TPose');
+      this.animations_['run'] = _FindAnim('TPose');
+      this.animations_['death'] = _FindAnim('TPose');
+      this.animations_['attack'] = _FindAnim('TPose');
+      this.animations_['dance'] = _FindAnim('TPose');
 
       // todo: hack until i figure out how to make / rename animations in blender
       if (this.animations_['idle'] == undefined || this.animations_['idle'] == null) {
-        this.animations_['idle'] = _FindAnim('Attack');
-        this.animations_['walk'] = _FindAnim('Attack');
-        this.animations_['run'] = _FindAnim('Attack');
-        this.animations_['death'] = _FindAnim('Attack');
-        this.animations_['attack'] = _FindAnim('Attack');
-        this.animations_['dance'] = _FindAnim('Attack');
+        this.animations_['idle'] = _FindAnim('TPose');
+        this.animations_['walk'] = _FindAnim('TPose');
+        this.animations_['run'] = _FindAnim('TPose');
+        this.animations_['death'] = _FindAnim('TPose');
+        this.animations_['attack'] = _FindAnim('TPose');
+        this.animations_['dance'] = _FindAnim('TPose');
       }
 
       this.target_.visible = true;
@@ -230,32 +232,28 @@ export class NPCController extends Component {
   }
 
   AddInstancing() {
-    const mesh = this.target_.getObjectByName("Ch03");
+    this.mesh = this.target_.getObjectByName("Ch03");
 
-    this.target_.traverse((child: any) => {
-      if ( child.isMesh ) {
-        const oscNode = oscSine( timerLocal(.1) );
-        const randomColors = range( new THREE.Color( 0x000000 ), new THREE.Color( 0xFFFFFF ) );
-        const randomMetalness = range( 0, 1 );
+    const oscNode = oscSine( timerLocal(.1) );
+    const randomColors = range( new THREE.Color( 0x000000 ), new THREE.Color( 0xFFFFFF ) );
+    const randomMetalness = range( 0, 1 );
 
-        mesh.material = new MeshStandardNodeMaterial();
-        mesh.material.roughness = .1;
-        mesh.material.metalnessNode = mix( 0.0, randomMetalness, oscNode );
-        mesh.material.colorNode = mix( color( 0xFFFFFF ), randomColors, oscNode );
+    this.mesh.material = new MeshStandardNodeMaterial();
+    this.mesh.material.roughness = .1;
+    this.mesh.material.metalnessNode = mix(0.0, randomMetalness, oscNode);
+    this.mesh.material.colorNode = mix( color(0xFFFFFF), randomColors, oscNode);
 
-        mesh.isInstancedMesh = true;
-        mesh.instanceMatrix = new THREE.InstancedBufferAttribute( new Float32Array( this.instanceCount_ * 16 ), 16 );
-        mesh.count = this.instanceCount_;
+    this.mesh.isInstancedMesh = true;
+    this.mesh.instanceMatrix = new THREE.InstancedBufferAttribute(new Float32Array(this.instanceCount_ * 16), 16);
+    this.mesh.count = this.instanceCount_;
 
-        const dummy = new THREE.Object3D();
-        for ( let i = 0; i < this.instanceCount_; i ++ ) {
-          dummy.position.x = - 200 + ( ( i % 5 ) * 70 );
-          dummy.position.y = Math.floor( i / 5 ) * - 200;
-          dummy.updateMatrix();
-          dummy.matrix.toArray(mesh.instanceMatrix.array, i * 16 );
-        }
-      }
-    });
+    const dummy = new THREE.Object3D();
+    for (let i = 0; i < this.instanceCount_; i ++) {
+      dummy.position.x = - 200 + ( ( i % 5 ) * 70 );
+      dummy.position.y = Math.floor( i / 5 ) * - 200;
+      dummy.updateMatrix();
+      dummy.matrix.toArray(this.mesh.instanceMatrix.array, i * 16);
+    }
   }
 
   Update(timeInSeconds: any) {
