@@ -1,4 +1,5 @@
-import * as THREE from 'three';
+import * as THREE from '../../../three.js';
+import { pass, mix, range, color, oscSine, timerLocal, MeshStandardNodeMaterial } from '../../../three.js/examples/jsm/nodes/Nodes.js';
 
 import { Component } from './entity';
 import { BasicCharacterControllerProxy, CharacterFSM} from './player-entity'
@@ -9,6 +10,8 @@ import { math } from '../shared/math';
 
 export class NPCController extends Component {
   
+  mixer: THREE.AnimationMixer;
+  clock: any;
   params_: any;
   group_: THREE.Group;
   animations_: {[x: string]: any};
@@ -17,13 +20,13 @@ export class NPCController extends Component {
   target_: any;
   bones_: any;
   mixer_: any;
-  objMesh: THREE.InstancedMesh<any, any>;
+  objMesh: any;
   instanceCount_: number;
 
   constructor(params: any) {
     super();
     this.params_ = params;
-    this.instanceCount_ = 30;
+    this.instanceCount_ = 3;
   }
 
   Destroy() {
@@ -50,6 +53,8 @@ export class NPCController extends Component {
   }
 
   _Init() {
+    this.clock = new THREE.Clock();
+    
     this.animations_ = {};
     this.group_ = new THREE.Group();
 
@@ -88,10 +93,11 @@ export class NPCController extends Component {
 
   OnPosition_(m: { value: any; }) {
     this.group_.position.copy(m.value);
-    this.RepositionInstances(m);
+    // this.RepositionInstances(m);
   }
 
   RepositionInstances(m: any) {
+    return;
     // Update relative instance positions
     // Todo: need a separate InstancedEntity class
     if (this.objMesh === null || this.objMesh === undefined) return;
@@ -110,6 +116,7 @@ export class NPCController extends Component {
   }
 
   OnRotation_(m: { value: any; }) {
+    return;
     // Update relative instance positions
     if (this.objMesh === null || this.objMesh === undefined) return;
     // Todo: should have a separate InstancedNPCController Component
@@ -125,18 +132,31 @@ export class NPCController extends Component {
     this.objMesh.instanceMatrix.needsUpdate = true;
   }
 
+  animate() {
+    // Todo: add to animations object
+    const delta = this.clock.getDelta();
+    if (this.mixer) this.mixer.update(delta);
+  }
+
   LoadModels_() {
     const classType = this.params_.desc.character.class;
     const modelData = defs.CHARACTER_MODELS[classType];
 
     const loader = this.FindEntity('loader').GetComponent('LoadController');
-    loader.LoadSkinnedGLB(modelData.path, modelData.base, (glb: any) => {
-      this.target_ = glb.scene;
-      this.target_.scale.setScalar(modelData.scale);
-      this.target_.visible = false;
 
-      // todo: is the group useful here?
-      // this.group_.add(this.target_);
+    const path = 'resources/characters/'
+    const base = 'Michelle.glb'
+    loader.LoadSkinnedGLB(path, base, (glb: any) => {
+      this.target_ = glb.scene;
+      // this.target_.scale.setScalar(modelData.scale);
+      this.target_.scale.setScalar(5);
+      this.target_.visible = false;
+      this.group_.add(this.target_);
+
+      this.mixer = new THREE.AnimationMixer(this.target_);
+      const action = this.mixer.clipAction(glb.animations[0]);
+      action.play();
+      this.params_.renderer.setAnimationLoop(() => {this.animate();});
 
       this.AddInstancing();
 
@@ -153,9 +173,6 @@ export class NPCController extends Component {
       this.target_.traverse((c: any) => {
         c.castShadow = true;
         c.receiveShadow = true;
-        if (c.material && c.material.map) {
-          c.material.map.encoding = THREE.sRGBEncoding;
-        }
       });
 
       this.mixer_ = new THREE.AnimationMixer(this.target_);
@@ -213,21 +230,32 @@ export class NPCController extends Component {
   }
 
   AddInstancing() {
-    const mesh = this.target_.getObjectByName("Cube001_1");
-    const geometry = mesh.geometry.clone();
-    const material = mesh.material;
-    this.objMesh = new THREE.InstancedMesh(geometry, material, 10000);
-    this.group_.add(this.objMesh);
+    const mesh = this.target_.getObjectByName("Ch03");
 
-    const dummy = new THREE.Object3D();
-    for(let i = 0; i < this.instanceCount_; i++) {
-      dummy.position.x = Math.random() * 10 - 5;
-      dummy.position.z = Math.random() * 10 - 5;
-      dummy.scale.x = dummy.scale.y = dummy.scale.z = 0.3 * (Math.random() + 0.2);
-      dummy.updateMatrix();
-      this.objMesh.setMatrixAt(i, dummy.matrix);
-      this.objMesh.setColorAt(i, new THREE.Color(Math.random() * 0xFFFFFF));
-    }
+    this.target_.traverse((child: any) => {
+      if ( child.isMesh ) {
+        const oscNode = oscSine( timerLocal(.1) );
+        const randomColors = range( new THREE.Color( 0x000000 ), new THREE.Color( 0xFFFFFF ) );
+        const randomMetalness = range( 0, 1 );
+
+        mesh.material = new MeshStandardNodeMaterial();
+        mesh.material.roughness = .1;
+        mesh.material.metalnessNode = mix( 0.0, randomMetalness, oscNode );
+        mesh.material.colorNode = mix( color( 0xFFFFFF ), randomColors, oscNode );
+
+        mesh.isInstancedMesh = true;
+        mesh.instanceMatrix = new THREE.InstancedBufferAttribute( new Float32Array( this.instanceCount_ * 16 ), 16 );
+        mesh.count = this.instanceCount_;
+
+        const dummy = new THREE.Object3D();
+        for ( let i = 0; i < this.instanceCount_; i ++ ) {
+          dummy.position.x = - 200 + ( ( i % 5 ) * 70 );
+          dummy.position.y = Math.floor( i / 5 ) * - 200;
+          dummy.updateMatrix();
+          dummy.matrix.toArray(mesh.instanceMatrix.array, i * 16 );
+        }
+      }
+    });
   }
 
   Update(timeInSeconds: any) {

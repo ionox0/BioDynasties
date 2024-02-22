@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * as THREE from '../../../three.js';
 
 import { ParticleSystem } from "./particle-system";
 import { Entity, Component} from "./entity";

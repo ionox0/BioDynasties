@@ -1,7 +1,7 @@
-import * as THREE from 'three';
+import * as THREE from '../../../three.js';
 
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
+import { GLTFLoader } from '../../../three.js/examples/jsm/loaders/GLTFLoader';
+import { OBJLoader } from '../../../three.js/examples/jsm/loaders/OBJLoader';
 
 import { Component } from './entity';
 
@@ -77,7 +77,6 @@ export class RenderComponent extends Component {
       for (let k in this.params_.textures.names) {
         const t = loader.LoadTexture(
             this.params_.textures.resourcePath, this.params_.textures.names[k]);
-        t.encoding = THREE.sRGBEncoding;
 
         if (this.params_.textures.wrap) {
           t.wrapS = THREE.RepeatWrapping;
@@ -135,8 +134,7 @@ export class RenderComponent extends Component {
 
   _LoadGLB() {
     const loader = new GLTFLoader();
-    loader.setPath(this.params_.resourcePath);
-    loader.load(this.params_.resourceName, (glb: { scene: any; }) => {
+    loader.load(this.params_.resourcePath + this.params_.resourceName, (glb: { scene: any; }) => {
       this._OnLoaded(glb.scene);
     });
   }
@@ -151,8 +149,7 @@ export class RenderComponent extends Component {
 
   _LoadOBJ() {
     const loader = new OBJLoader();
-    loader.setPath(this.params_.resourcePath);
-    loader.load(this.params_.resourceName, (fbx: any) => {
+    loader.load(this.params_.resourcePath + this.params_.resourceName, (fbx: any) => {
       this._OnLoaded(fbx);
     });
   }

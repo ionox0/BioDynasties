@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * as THREE from '../../../three.js';
 
 
 export class State {
@@ -66,6 +66,7 @@ export class DanceState extends State {
   _action: any;
 
   _FinishedCallback: () => void;
+  
   constructor(parent: any) {
     super(parent);
 

@@ -31,7 +31,7 @@ export const defs = (() => {
         name: 'Parrot',
     },
     beetle: {
-        base: 'black_ox_beetle-optimized.glb',
+        base: 'black_ox_beetle_small.glb',
         path: './resources/bugs/beetle/',
         anchors: {
           rightHand: 'Mandible1_L_54',

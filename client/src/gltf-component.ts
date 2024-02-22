@@ -1,6 +1,6 @@
-import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
+import * as THREE from '../../../three.js';
+import { GLTFLoader } from '../../../three.js/examples/jsm/loaders/GLTFLoader';
+import { FBXLoader } from '../../../three.js/examples/jsm/loaders/FBXLoader';
 
 import { Component } from './entity';
 
@@ -44,11 +44,11 @@ export class StaticModelComponent extends Component {
     this._target.scale.setScalar(this._params.scale);
     this._target.position.copy(this.parent_._position);
 
-    let texture: { encoding: any; } = null;
+    let texture: any = null;
     if (this._params.resourceTexture) {
       const texLoader = new THREE.TextureLoader();
       texture = texLoader.load(this._params.resourceTexture);
-      texture.encoding = THREE.sRGBEncoding;
+      // texture.encoding = THREE.sRGBEncoding;
     }
 
     this._target.traverse((c: { material: any; receiveShadow: any; castShadow: any; visible: any; }) => {
@@ -84,16 +84,16 @@ export class StaticModelComponent extends Component {
 
   _LoadGLB() {
     const loader = new GLTFLoader();
-    loader.setPath(this._params.resourcePath);
-    loader.load(this._params.resourceName, (glb: { scene: any; }) => {
+    // loader.setPath(this._params.resourcePath);
+    loader.load(this._params.resourcePath + this._params.resourceName, (glb: { scene: any; }) => {
       this._OnLoaded(glb.scene);
     });
   }
 
   _LoadFBX() {
     const loader = new FBXLoader();
-    loader.setPath(this._params.resourcePath);
-    loader.load(this._params.resourceName, (fbx: any) => {
+    // loader.setPath(this._params.resourcePath);
+    loader.load(this._params.resourcePath + this._params.resourceName, (fbx: any) => {
       this._OnLoaded(fbx);
     });
   }
@@ -150,11 +150,11 @@ export class AnimatedModelComponent extends Component {
       value: this._parent._position,
     });
 
-    let texture: { encoding: any; } = null;
+    let texture: any = null;
     if (this._params.resourceTexture) {
       const texLoader = new THREE.TextureLoader();
       texture = texLoader.load(this._params.resourceTexture);
-      texture.encoding = THREE.sRGBEncoding;
+      // texture.encoding = THREE.sRGBEncoding;
     }
 
     this._target.traverse((c: { material: any; receiveShadow: any; castShadow: any; visible: any; }) => {
@@ -195,8 +195,8 @@ export class AnimatedModelComponent extends Component {
     };
 
     const loader = new FBXLoader();
-    loader.setPath(this._params.resourcePath);
-    loader.load(this._params.resourceAnimation, (a: any) => { _OnLoad(a); });
+    // loader.setPath(this._params.resourcePath);
+    loader.load(this._params.resourcePath, this._params.resourceAnimation, (a: any) => { _OnLoad(a); });
 
     this._mixer = new THREE.AnimationMixer(this._target);
 
@@ -209,16 +209,16 @@ export class AnimatedModelComponent extends Component {
 
   _LoadGLB() {
     const loader = new GLTFLoader();
-    loader.setPath(this._params.resourcePath);
-    loader.load(this._params.resourceName, (glb: { scene: any; animations: any; }) => {
+    // loader.setPath(this._params.resourcePath);
+    loader.load(this._params.resourcePath + this._params.resourceName, (glb: { scene: any; animations: any; }) => {
       this._OnLoaded(glb.scene);
     });
   }
 
   _LoadFBX() {
     const loader = new FBXLoader();
-    loader.setPath(this._params.resourcePath);
-    loader.load(this._params.resourceName, (fbx: any) => {
+    // loader.setPath(this._params.resourcePath);
+    loader.load(this._params.resourcePath + this._params.resourceName, (fbx: any) => {
       this._OnLoaded(fbx);
     });
   }

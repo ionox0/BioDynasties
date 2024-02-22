@@ -12,13 +12,8 @@ import { ThreeJSController } from './threejs_component';
 import { LevelUpComponentSpawner } from './level-up-component';
 import { PlayerSpawner, NetworkEntitySpawner } from './spawners';
 import { TerrainChunkManager } from './terrain';
-
 import { spatial_hash_grid } from '../shared/spatial-hash-grid';
 
-// import { Birds } from './birds';
-
-
-// let birdsObj: any;
 
 class CrappyMMOAttempt {
 
@@ -121,6 +116,7 @@ class CrappyMMOAttempt {
         grid: this.grid_,
         scene: this.scene_,
         camera: this.camera_,
+        three: this.threejs_
     }));
     this.entityManager_.Add(spawner, 'spawners');
   }
@@ -173,6 +169,10 @@ class CrappyMMOAttempt {
 
 let _APP = null;
 
-window.addEventListener('DOMContentLoaded', () => {
+if (document.readyState !== 'loading') {
   _APP = new CrappyMMOAttempt();
-});
+} else {
+  document.addEventListener('DOMContentLoaded', function () {
+    _APP = new CrappyMMOAttempt();
+  });
+}

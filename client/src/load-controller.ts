@@ -1,8 +1,8 @@
-import * as THREE from 'three';
-import { SkeletonUtils } from 'three/examples/jsm/utils/SkeletonUtils';
+import * as THREE from '../../../three.js';
+import { clone as threeClone } from '../../../three.js/examples/jsm/utils/SkeletonUtils';
 
-import { FBXLoader}  from 'three/examples/jsm/loaders/FBXLoader';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { FBXLoader}  from '../../../three.js/examples/jsm/loaders/FBXLoader';
+import { GLTFLoader } from '../../../three.js/examples/jsm/loaders/GLTFLoader';
 
 import { Component } from "./entity";
 import { MeshoptDecoder } from 'meshoptimizer';
@@ -26,7 +26,6 @@ export class LoadController extends Component {
       loader.setPath(path);
 
       this.textures_[name] = {loader: loader, texture: loader.load(name)};
-      this.textures_[name].encoding = THREE.sRGBEncoding;
     }
 
     return this.textures_[name].texture;
@@ -35,10 +34,9 @@ export class LoadController extends Component {
   LoadFBX(path: any, name: string, onLoad: Function) {
     if (!(name in this.models_)) {
       const loader = new FBXLoader();
-      loader.setPath(path);
 
       this.models_[name] = {loader: loader, asset: null, queue: [onLoad]};
-      this.models_[name].loader.load(name, (fbx: any) => {
+      this.models_[name].loader.load(path + name, (fbx: any) => {
         this.models_[name].asset = fbx;
 
         const queue = this.models_[name].queue;
@@ -63,32 +61,21 @@ export class LoadController extends Component {
       if (name == 'black_ox_beetle-optimized.glb') {
         loader.setMeshoptDecoder(MeshoptDecoder);
       }
-  
-      loader.setPath(path);
 
       this.models_[name] = {loader: loader, asset: null, queue: [onLoad]};
-      this.models_[name].loader.load(name, (glb: any) => {
+      this.models_[name].loader.load(path + name, (glb: any) => {
         this.models_[name].asset = glb;
 
         glb.scene.traverse((c: { frustumCulled: boolean; }) => {
           // Apparently this doesn't work, so just disable frustum culling.
           c.frustumCulled = false;
-
-          // if (c.geometry) {
-          //   // Just make our own, super crappy, super big box
-          //   c.geometry.boundingBox = new THREE.Box3(
-          //       new THREE.Vector3(-50, -50, -50),
-          //       new THREE.Vector3(50, 50, 50));
-          //   c.geometry.boundingSphere = new THREE.Sphere();
-          //   c.geometry.boundingBox.getBoundingSphere(c.geometry.boundingSphere);
-          // }
         });
 
         const queue = this.models_[name].queue;
         this.models_[name].queue = null;
         for (let q of queue) {
           const clone = {...glb};
-          clone.scene = SkeletonUtils.clone(clone.scene);
+          clone.scene = threeClone(clone.scene);
 
           q(clone);
         }
@@ -97,7 +84,7 @@ export class LoadController extends Component {
       this.models_[name].queue.push(onLoad);
     } else {
       const clone = {...this.models_[name].asset};
-      clone.scene = SkeletonUtils.clone(clone.scene);
+      clone.scene = threeClone(clone.scene);
 
       onLoad(clone);
     }

@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * as THREE from '../../../three.js';
 
 
 export const textures = (function() {
@@ -50,7 +50,7 @@ export const textures = (function() {
 
       _LoadTexture(n: any) {
         const t = this._loader.load(n);
-        t.encoding = THREE.sRGBEncoding;
+        // t.encoding = THREE.sRGBEncoding;
         return t;
       }
 
@@ -67,7 +67,7 @@ export const textures = (function() {
             data.set(curData.data, offset);
           }
     
-          const diffuse = new THREE.DataTexture2DArray(data, 1024, 1024, atlas.textures.length);
+          const diffuse = new THREE.DataArrayTexture(data, 1024, 1024, atlas.textures.length);
           diffuse.format = THREE.RGBAFormat;
           diffuse.type = THREE.UnsignedByteType;
           diffuse.minFilter = THREE.LinearMipMapLinearFilter;
@@ -76,11 +76,10 @@ export const textures = (function() {
           diffuse.wrapT = THREE.RepeatWrapping;
           diffuse.generateMipmaps = true;
 
-          const caps = this._threejs.capabilities;
-          const aniso = caps.getMaxAnisotropy();
+          // const caps = this._threejs.capabilities;
+          // const aniso = caps.getMaxAnisotropy();
 
           diffuse.anisotropy = 4;
-
           atlas.atlas = diffuse;
         }
 

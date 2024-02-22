@@ -106,6 +106,7 @@ export class NetworkEntitySpawner extends Component {
         camera: this.params_.camera,
         scene: this.params_.scene,
         desc: desc,
+        renderer: this.params_.three
     }));
     
     npc.AddComponent(

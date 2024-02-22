@@ -1,4 +1,5 @@
-import * as THREE from 'three';
+import * as THREE from '../../../three.js';
+
 import { EntityManager } from './entity-manager';
 
 

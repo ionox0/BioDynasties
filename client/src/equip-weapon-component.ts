@@ -1,5 +1,5 @@
-import * as THREE from 'three';
-import {FBXLoader} from 'three/examples/jsm/loaders/FBXLoader';
+import * as THREE from '../../../three.js';
+import { FBXLoader } from '../../../three.js/examples/jsm/loaders/FBXLoader';
 
 import { Component } from './entity';
 import { defs } from '../shared/defs';
@@ -78,8 +78,8 @@ export class EquipWeapon extends Component {
 
   _LoadModels(item: { renderParams: { name: string; scale: any; }; }, cb: { (): void; (): void; }) {
     const loader = new FBXLoader();
-    loader.setPath('./resources/weapons/FBX/');
-    loader.load(item.renderParams.name + '.fbx', (fbx: null) => {
+    // loader.setPath();
+    loader.load('./resources/weapons/FBX/', item.renderParams.name + '.fbx', (fbx: null) => {
       this.target_ = fbx;
       this.target_.scale.setScalar(item.renderParams.scale);
       // this.target_.rotateY(Math.PI);
