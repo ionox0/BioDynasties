@@ -1,6 +1,35 @@
 export const defs = (() => {
 
   const _CHARACTER_MODELS: any = {
+    michelle: {
+        base: 'Michelle.glb',
+        path: './resources/characters/',
+        anchors: {
+          rightHand: 'Body',
+        },
+        nameOffset: 11,
+        attack: {
+            timing: 0.35,
+            cooldown: 2.0,
+            type: 'melee',
+            range: 2,
+        },
+        scale: 0.2,
+        inventory: {
+            'inventory-equip-1': 'weapon.hammer1',
+        },
+        stats: {
+            health: 20,
+            maxHealth: 200,
+            strength: 2,
+            wisdomness: 5,
+            benchpress: 20,
+            curl: 100,
+            experience: 0,
+            level: 1,
+        },
+        name: 'michelle',
+    },
     parrot: {
         base: 'Parrot.glb',
         path: './resources/nature/',

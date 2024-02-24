@@ -357,12 +357,12 @@ export const world_client = (() => {
 
     OnUpdate_(timeElapsed: number) {
       // Never times out
-      this.timeout_ = 1000.0;
+      this.timeout_ = 1000000.0;
 
       if (this.entity_.Health > 0) {
         this.fsm_.Update(timeElapsed);
       } else {
-        this.deathTimer_ += timeElapsed;
+        // this.deathTimer_ += timeElapsed;
       }
     }
   };

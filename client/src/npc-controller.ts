@@ -22,11 +22,12 @@ export class NPCController extends Component {
   mixer_: any;
   instanceCount_: number;
   mesh: any;
+  object_: any;
 
   constructor(params: any) {
     super();
     this.params_ = params;
-    this.instanceCount_ = 10;
+    this.instanceCount_ = 50;
   }
 
   Destroy() {
@@ -57,7 +58,6 @@ export class NPCController extends Component {
     
     this.animations_ = {};
     this.group_ = new THREE.Group();
-
     this.params_.scene.add(this.group_);
     this.queuedState_ = null;
 
@@ -65,7 +65,7 @@ export class NPCController extends Component {
   }
 
   InitComponent() {
-    this._RegisterHandler('health.death', (m: any) => { this.OnDeath_(m); });
+    // this._RegisterHandler('health.death', (m: any) => { this.OnDeath_(m); });
     this._RegisterHandler('update.position', (m: { value: any; }) => { this.OnPosition_(m); });
     this._RegisterHandler('update.rotation', (m: { value: any; }) => { this.OnRotation_(m); });
   }
@@ -80,7 +80,7 @@ export class NPCController extends Component {
     // Right now, they're inferred from whatever animation we're running, blech
     if (s == 'attack' && this.stateMachine_._currentState.Name != 'attack') {
       this.Broadcast({
-          topic: 'action.attack',
+        topic: 'action.attack',
       });
     }
 
@@ -93,49 +93,46 @@ export class NPCController extends Component {
 
   OnPosition_(m: { value: any; }) {
     this.group_.position.copy(m.value);
-    this.RepositionInstances(m);
+    this.RepositionInstances();
   }
 
-  RepositionInstances(m: any) {
-    return;
-    // Update relative instance positions
-    // Todo: need a separate InstancedEntity class
+  RepositionInstances() {
     if (this.mesh === null || this.mesh === undefined) return;
-    const dummy: any = new THREE.Object3D();
-    const matrix = new THREE.Matrix4();
-    for(let i = 0; i < this.instanceCount_; i++) {
-      this.mesh.getMatrixAt(i, matrix);
-      matrix.decompose(dummy.position, dummy.rotation, dummy.scale);
-      // Todo: look into group pathing algorithms
-      dummy.position.x = math.smootherstep(0.4, dummy.position.x, dummy.position.x + Math.random() - 0.5);
-      dummy.position.z = math.smootherstep(0.4, dummy.position.z, dummy.position.z + Math.random() - 0.5);
-      dummy.updateMatrix();
-      this.mesh.setMatrixAt(i, dummy.matrix);
+
+    for (let i = 0; i < this.instanceCount_; i ++) {
+      const dummyMat = new THREE.Matrix4();
+      dummyMat.fromArray(this.mesh.instanceMatrix.array, i * 16);
+
+      const vec = new THREE.Vector3();
+      vec.setFromMatrixPosition(dummyMat);
+      vec.x += (Math.random() - 0.5) * 2;
+      vec.y += (Math.random() - 0.5) * 2;
+
+      dummyMat.setPosition(vec.x, vec.y, vec.z);
+      dummyMat.toArray(this.mesh.instanceMatrix.array, i * 16);
     }
-    this.mesh.instanceMatrix.needsUpdate = true;
   }
 
-  OnRotation_(m: { value: any; }) {
-    this.group_.rotation.setFromQuaternion(m.value);
-    return;
-    // Todo: should just have 1 handler for position + rotation
-    // Update relative instance positions
-    // Todo: can not get this to work...
+  OnRotation_(m: { value: THREE.Quaternion; }) {
     if (this.mesh === null || this.mesh === undefined) return;
-    var matrixSize = 16;
-    for (var i = 0; i < this.instanceCount_; i++) {
-      var newMatrix: any = new THREE.Matrix4();
-      newMatrix.makeRotationFromQuaternion(m.value);
-      var offset = i * matrixSize;
-      for (var j = 0; j < matrixSize; j++) {
-        this.mesh.instanceMatrix.array[offset + j] = newMatrix.elements[j];
-      }
+    
+    for (let i = 0; i < this.instanceCount_; i ++) {
+      var position = new THREE.Vector3();
+      var rotation = new THREE.Quaternion();
+      var scale = new THREE.Vector3();
+      const dummyMat = new THREE.Matrix4();
+      dummyMat.fromArray(this.mesh.instanceMatrix.array, i * 16);
+      dummyMat.decompose(position, rotation, scale);
+      const newQuat = new THREE.Quaternion(m.value.x, m.value.z, - m.value.y, m.value.w);
+      var updatedMatrix = new THREE.Matrix4();
+      updatedMatrix.compose(position, newQuat, scale);
+      updatedMatrix.toArray(this.mesh.instanceMatrix.array, i * 16);
     }
-    this.mesh.material.needsUpdate = true;
-    this.mesh.instanceMatrix.needsUpdate = true;
   }
 
   animate() {
+    // Pausing animations for now
+    return;
     // Todo: add to animations object
     const delta = this.clock.getDelta();
     if (this.mixer) this.mixer.update(delta);
@@ -149,7 +146,9 @@ export class NPCController extends Component {
 
     const path = 'resources/characters/'
     const base = 'Michelle.glb'
+    // loader.LoadSkinnedGLB(modelData.path, modelData.base, (glb: any) => {
     loader.LoadSkinnedGLB(path, base, (glb: any) => {
+      this.object_ = glb;
       this.target_ = glb.scene;
       // this.target_.scale.setScalar(modelData.scale);
       this.target_.scale.setScalar(5);
@@ -161,7 +160,11 @@ export class NPCController extends Component {
       action.play();
       this.params_.renderer.setAnimationLoop(() => {this.animate();});
 
-      this.AddInstancing();
+      this.target_.traverse( ( child: any ) => {
+        if ( child.isMesh ) {
+          this.AddInstancing(child);
+        }
+      });
 
       this.bones_ = {};
       this.target_.traverse((c: { skeleton: { bones: any; }; }) => {
@@ -231,17 +234,17 @@ export class NPCController extends Component {
     });
   }
 
-  AddInstancing() {
-    this.mesh = this.target_.getObjectByName("Ch03");
+  AddInstancing(child: any) {
+    // this.mesh = this.target_.getObjectByName("Ch03");
+    this.mesh = child;
 
-    const oscNode = oscSine( timerLocal(.1) );
-    const randomColors = range( new THREE.Color( 0x000000 ), new THREE.Color( 0xFFFFFF ) );
-    const randomMetalness = range( 0, 1 );
-
-    this.mesh.material = new MeshStandardNodeMaterial();
-    this.mesh.material.roughness = .1;
-    this.mesh.material.metalnessNode = mix(0.0, randomMetalness, oscNode);
-    this.mesh.material.colorNode = mix( color(0xFFFFFF), randomColors, oscNode);
+    this.mesh.matrixAutoUpdate = true;
+    this.mesh.traverse(function( node: any ) {
+      if ( node.isMesh ) {
+        node.matrixAutoUpdate = true;
+        node.matrixWorldAutoUpdate = true;
+      }
+    });
 
     this.mesh.isInstancedMesh = true;
     this.mesh.instanceMatrix = new THREE.InstancedBufferAttribute(new Float32Array(this.instanceCount_ * 16), 16);
@@ -249,11 +252,22 @@ export class NPCController extends Component {
 
     const dummy = new THREE.Object3D();
     for (let i = 0; i < this.instanceCount_; i ++) {
-      dummy.position.x = - 200 + ( ( i % 5 ) * 70 );
-      dummy.position.y = Math.floor( i / 5 ) * - 200;
+      dummy.position.x = - 200 + ( ( i % 10 ) * 70 );
+      dummy.position.y = Math.floor( i / 10 ) * - 200;
       dummy.updateMatrix();
       dummy.matrix.toArray(this.mesh.instanceMatrix.array, i * 16);
     }
+    this.mesh.instanceMatrix.needsUpdate = true;
+    this.mesh.material.needsUpdate = true;
+    this.mesh.instanceMatrix.version += 1;
+
+    this.mesh.needsUpdate = true;
+    this.mesh.matrixWorldNeedsUpdate = true;
+    
+    this.mesh.computeBoundingBox();
+    this.mesh.computeBoundingSphere();
+    this.mesh.geometry.computeBoundingBox();
+    this.mesh.geometry.computeBoundingSphere();
   }
 
   Update(timeInSeconds: any) {
