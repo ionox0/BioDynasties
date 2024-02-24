@@ -1,14 +1,10 @@
 import * as THREE from '../../../three.js';
 
 import { Component } from "./entity";
+import { pass, texture } from '../../../three.js/examples/jsm/nodes/Nodes';
 import WebGPURenderer from '../../../three.js/examples/jsm/renderers/webgpu/WebGPURenderer.js';
-import { HDRCubeTextureLoader } from '../../../three.js/examples/jsm/loaders/HDRCubeTextureLoader.js';
-
 import PostProcessing from '../../../three.js/examples/jsm/renderers/common/PostProcessing.js';
-import { pass } from '../../../three.js/examples/jsm/nodes/Nodes';
 
-import { mix, range, color, oscSine, timerLocal, MeshStandardNodeMaterial, TextureNode, normalMap, texture  } from '../../../three.js/examples/jsm/nodes/Nodes.js';
-import { Node, NodeUpdateType, nodeObject, uniform, cubeTexture } from '../../../three.js/examples/jsm/nodes/Nodes.js';
 
 
 const _VS = `
@@ -175,17 +171,6 @@ export class ThreeJSController extends Component {
     hemiLight.groundColor.setHSL(0.095, 1, 0.5);
     this.scene_.add(hemiLight);
 
-    const loader = new THREE.CubeTextureLoader();
-    const texture: any = loader.load([
-        './resources/terrain/space-posx.jpg',
-        './resources/terrain/space-negx.jpg',
-        './resources/terrain/space-posy.jpg',
-        './resources/terrain/space-negy.jpg',
-        './resources/terrain/space-posz.jpg',
-        './resources/terrain/space-negz.jpg',
-    ]);
-    texture.encoding = THREE.SRGBColorSpace;
-
     const uniforms = {
       "topColor": { value: new THREE.Color(0x000000) },
       "bottomColor": { value: new THREE.Color(0x5d679e) },
@@ -195,6 +180,7 @@ export class ThreeJSController extends Component {
     };
     // uniforms["topColor"].value.copy(hemiLight.color);
 
+    // Todo: use TextureNode shaders and fix fog
     this.scene_.fog.color.copy(uniforms["bottomColor"].value);
 
     const cube2Urls = [
@@ -212,6 +198,7 @@ export class ThreeJSController extends Component {
           this.scene_.background = hdrTexture;
           this.scene_.environment = hdrTexture;
         });
+    // texture.encoding = THREE.SRGBColorSpace;
   }
 
   Update(_: any) {
