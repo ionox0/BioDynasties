@@ -27,7 +27,7 @@ export class NPCController extends Component {
   constructor(params: any) {
     super();
     this.params_ = params;
-    this.instanceCount_ = 50;
+    this.instanceCount_ = 20;
   }
 
   Destroy() {
@@ -115,24 +115,22 @@ export class NPCController extends Component {
 
   OnRotation_(m: { value: THREE.Quaternion; }) {
     if (this.mesh === null || this.mesh === undefined) return;
+    const newQuat = new THREE.Quaternion(m.value.x, m.value.z, - m.value.y, m.value.w);
     
+    var position = new THREE.Vector3();
+    var rotation = new THREE.Quaternion();
+    var scale = new THREE.Vector3();
+    const dummyMat = new THREE.Matrix4();
+    var updatedMatrix = new THREE.Matrix4();
     for (let i = 0; i < this.instanceCount_; i ++) {
-      var position = new THREE.Vector3();
-      var rotation = new THREE.Quaternion();
-      var scale = new THREE.Vector3();
-      const dummyMat = new THREE.Matrix4();
       dummyMat.fromArray(this.mesh.instanceMatrix.array, i * 16);
       dummyMat.decompose(position, rotation, scale);
-      const newQuat = new THREE.Quaternion(m.value.x, m.value.z, - m.value.y, m.value.w);
-      var updatedMatrix = new THREE.Matrix4();
       updatedMatrix.compose(position, newQuat, scale);
       updatedMatrix.toArray(this.mesh.instanceMatrix.array, i * 16);
     }
   }
 
   animate() {
-    // Pausing animations for now
-    return;
     // Todo: add to animations object
     const delta = this.clock.getDelta();
     if (this.mixer) this.mixer.update(delta);
@@ -252,8 +250,8 @@ export class NPCController extends Component {
 
     const dummy = new THREE.Object3D();
     for (let i = 0; i < this.instanceCount_; i ++) {
-      dummy.position.x = - 200 + ( ( i % 10 ) * 70 );
-      dummy.position.y = Math.floor( i / 10 ) * - 200;
+      dummy.position.x = Math.random() * 800 - 400;
+      dummy.position.y = Math.random() * 800 - 400;
       dummy.updateMatrix();
       dummy.matrix.toArray(this.mesh.instanceMatrix.array, i * 16);
     }
