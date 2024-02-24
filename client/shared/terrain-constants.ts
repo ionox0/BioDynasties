@@ -23,7 +23,7 @@ export const terrain_constants = (function() {
       exponentiation: 7.5,
       height: NOISE_HEIGHT,
       scale: NOISE_SCALE,
-      seed: 10
+      seed: 149
     },
   }
 })();

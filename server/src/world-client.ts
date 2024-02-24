@@ -275,7 +275,7 @@ export const world_client = (() => {
 
       vec3.add(this.entity_.position_, this.entity_.position_, movement);
 
-      this.entity_.position_[1] = this.terrain_.Get(...this.entity_.position_)[0];
+      this.entity_.position_[1] = this.terrain_.Get(...this.entity_.position_)[0] / 1.5;
       this.entity_.UpdateGridClient_();
 
       const distance = vec3.distance(this.entity_.position_, this.target_.position_);
@@ -346,7 +346,7 @@ export const world_client = (() => {
     }
 
     get IsDead() {
-      return this.deathTimer_ >= 30.0;
+      return this.deathTimer_ >= 300.0;
     }
 
     OnDeath() {

@@ -106,7 +106,7 @@ export class NPCController extends Component {
       const vec = new THREE.Vector3();
       vec.setFromMatrixPosition(dummyMat);
       vec.x += (Math.random() - 0.5) * 2;
-      vec.y += (Math.random() - 0.5) * 2;
+      vec.z += (Math.random() - 0.5) * 2;
 
       dummyMat.setPosition(vec.x, vec.y, vec.z);
       dummyMat.toArray(this.mesh.instanceMatrix.array, i * 16);
@@ -144,12 +144,12 @@ export class NPCController extends Component {
 
     const path = 'resources/characters/'
     const base = 'Michelle.glb'
-    // loader.LoadSkinnedGLB(modelData.path, modelData.base, (glb: any) => {
-    loader.LoadSkinnedGLB(path, base, (glb: any) => {
+    loader.LoadSkinnedGLB(modelData.path, modelData.base, (glb: any) => {
+    // loader.LoadSkinnedGLB(path, base, (glb: any) => {
       this.object_ = glb;
       this.target_ = glb.scene;
-      // this.target_.scale.setScalar(modelData.scale);
-      this.target_.scale.setScalar(5);
+      this.target_.scale.setScalar(modelData.scale);
+      // this.target_.scale.setScalar(5);
       this.target_.visible = false;
       this.group_.add(this.target_);
 
@@ -204,12 +204,18 @@ export class NPCController extends Component {
 
       // todo: hack until i figure out how to make / rename animations in blender
       if (this.animations_['idle'] == undefined || this.animations_['idle'] == null) {
-        this.animations_['idle'] = _FindAnim('TPose');
-        this.animations_['walk'] = _FindAnim('TPose');
-        this.animations_['run'] = _FindAnim('TPose');
-        this.animations_['death'] = _FindAnim('TPose');
-        this.animations_['attack'] = _FindAnim('TPose');
-        this.animations_['dance'] = _FindAnim('TPose');
+        const clip = glb.animations[0];
+        const action = this.mixer_.clipAction(clip);
+        const anim = {
+          clip: clip,
+          action: action
+        }
+        this.animations_['idle'] = anim;
+        this.animations_['walk'] = anim;
+        this.animations_['run'] = anim;
+        this.animations_['death'] = anim;
+        this.animations_['attack'] = anim;
+        this.animations_['dance'] = anim;
       }
 
       this.target_.visible = true;
@@ -250,8 +256,8 @@ export class NPCController extends Component {
 
     const dummy = new THREE.Object3D();
     for (let i = 0; i < this.instanceCount_; i ++) {
-      dummy.position.x = Math.random() * 800 - 400;
-      dummy.position.y = Math.random() * 800 - 400;
+      dummy.position.x = Math.random() * 50 - 25;
+      dummy.position.z = Math.random() * 50 - 25;
       dummy.updateMatrix();
       dummy.matrix.toArray(this.mesh.instanceMatrix.array, i * 16);
     }
@@ -262,10 +268,10 @@ export class NPCController extends Component {
     this.mesh.needsUpdate = true;
     this.mesh.matrixWorldNeedsUpdate = true;
     
-    this.mesh.computeBoundingBox();
-    this.mesh.computeBoundingSphere();
-    this.mesh.geometry.computeBoundingBox();
-    this.mesh.geometry.computeBoundingSphere();
+    // this.mesh.computeBoundingBox();
+    // this.mesh.computeBoundingSphere();
+    // this.mesh.geometry.computeBoundingBox();
+    // this.mesh.geometry.computeBoundingSphere();
   }
 
   Update(timeInSeconds: any) {
