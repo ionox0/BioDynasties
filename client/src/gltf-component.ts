@@ -48,7 +48,7 @@ export class StaticModelComponent extends Component {
     if (this._params.resourceTexture) {
       const texLoader = new THREE.TextureLoader();
       texture = texLoader.load(this._params.resourceTexture);
-      // texture.encoding = THREE.sRGBEncoding;
+      texture.encoding = THREE.LinearSRGBColorSpace;
     }
 
     this._target.traverse((c: { material: any; receiveShadow: any; castShadow: any; visible: any; }) => {
@@ -154,7 +154,7 @@ export class AnimatedModelComponent extends Component {
     if (this._params.resourceTexture) {
       const texLoader = new THREE.TextureLoader();
       texture = texLoader.load(this._params.resourceTexture);
-      // texture.encoding = THREE.sRGBEncoding;
+      texture.encoding = THREE.LinearSRGBColorSpace;
     }
 
     this._target.traverse((c: { material: any; receiveShadow: any; castShadow: any; visible: any; }) => {

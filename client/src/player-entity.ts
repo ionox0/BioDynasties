@@ -117,7 +117,7 @@ export class BasicCharacterController extends Component {
         c.castShadow = true;
         c.receiveShadow = true;
         if (c.material && c.material.map) {
-          // c.material.map.encoding = THREE.sRGBEncoding;
+          c.material.map.encoding = THREE.LinearSRGBColorSpace;
         }
       });
 

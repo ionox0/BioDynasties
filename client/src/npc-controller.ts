@@ -27,7 +27,7 @@ export class NPCController extends Component {
   constructor(params: any) {
     super();
     this.params_ = params;
-    this.instanceCount_ = 20;
+    this.instanceCount_ = 200;
   }
 
   Destroy() {
@@ -256,8 +256,8 @@ export class NPCController extends Component {
 
     const dummy = new THREE.Object3D();
     for (let i = 0; i < this.instanceCount_; i ++) {
-      dummy.position.x = Math.random() * 50 - 25;
-      dummy.position.z = Math.random() * 50 - 25;
+      dummy.position.x = Math.random() * 200 - 100;
+      dummy.position.z = Math.random() * 200 - 100;
       dummy.updateMatrix();
       dummy.matrix.toArray(this.mesh.instanceMatrix.array, i * 16);
     }

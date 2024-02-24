@@ -228,20 +228,22 @@ export class ParticleSystem {
         }
     };
 
-    this.material_ = new THREE.MeshBasicMaterial({
-        uniforms: uniforms,
-        vertexShader: _VS,
-        fragmentShader: _FS,
-        // Todo: fix "THREE.WebGPURenderer: Blend factor not supported. one" with these params:
-        // blending: THREE.CustomBlending,
-        // blendEquation: THREE.AddEquation,
-        // blendSrc: THREE.OneFactor,
-        // blendDst: THREE.OneMinusSrcAlphaFactor,
-        depthTest: true,
-        depthWrite: false,
-        transparent: true,
-        vertexColors: true
+    this.material_ = new THREE.MeshStandardMaterial({
+      // Todo: fix "THREE.WebGPURenderer: Blend factor not supported. one" with these params:
+      // blending: THREE.CustomBlending,
+      // blendEquation: THREE.AddEquation,
+      // blendSrc: THREE.OneFactor,
+      // blendDst: THREE.OneMinusSrcAlphaFactor,
+      depthTest: true,
+      depthWrite: false,
+      transparent: true,
+      vertexColors: true
     });
+    this.material_.onBeforeCompile = (shader: any) => {
+      shader.uniforms = uniforms;
+      shader.vertexShader = _VS;
+      shader.fragmentShader = _FS;
+    };
 
     this.camera_ = params.camera;
     this.particles_ = [];

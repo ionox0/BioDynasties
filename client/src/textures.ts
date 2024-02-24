@@ -50,7 +50,7 @@ export const textures = (function() {
 
       _LoadTexture(n: any) {
         const t = this._loader.load(n);
-        // t.encoding = THREE.sRGBEncoding;
+        t.encoding = THREE.LinearSRGBColorSpace;
         return t;
       }
 

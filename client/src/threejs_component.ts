@@ -2,9 +2,13 @@ import * as THREE from '../../../three.js';
 
 import { Component } from "./entity";
 import WebGPURenderer from '../../../three.js/examples/jsm/renderers/webgpu/WebGPURenderer.js';
+import { HDRCubeTextureLoader } from '../../../three.js/examples/jsm/loaders/HDRCubeTextureLoader.js';
 
 import PostProcessing from '../../../three.js/examples/jsm/renderers/common/PostProcessing.js';
 import { pass } from '../../../three.js/examples/jsm/nodes/Nodes';
+
+import { mix, range, color, oscSine, timerLocal, MeshStandardNodeMaterial, TextureNode, normalMap, texture  } from '../../../three.js/examples/jsm/nodes/Nodes.js';
+import { Node, NodeUpdateType, nodeObject, uniform, cubeTexture } from '../../../three.js/examples/jsm/nodes/Nodes.js';
 
 
 const _VS = `
@@ -96,7 +100,7 @@ export class ThreeJSController extends Component {
     this.threejs_ = new WebGPURenderer({
       antialias: false,
     });
-    // this.threejs_.outputEncoding = THREE.sRGBEncoding;
+    this.threejs_.outputEncoding = THREE.SRGBColorSpace;
     this.threejs_.gammaFactor = 2.2;
     this.threejs_.shadowMap.enabled = true;
     this.threejs_.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -131,8 +135,8 @@ export class ThreeJSController extends Component {
 
     // lights
     const centerLight = new THREE.PointLight( 0xff9900, 1, 100 );
-    // centerLight.position.y = 4.5;
-    // centerLight.position.z = - 2;
+    centerLight.position.y = 4.5;
+    centerLight.position.z = - 2;
     centerLight.power = 400;
     this.scene_.add( centerLight );
 
@@ -171,9 +175,8 @@ export class ThreeJSController extends Component {
     hemiLight.groundColor.setHSL(0.095, 1, 0.5);
     this.scene_.add(hemiLight);
 
-
     const loader = new THREE.CubeTextureLoader();
-    const texture = loader.load([
+    const texture: any = loader.load([
         './resources/terrain/space-posx.jpg',
         './resources/terrain/space-negx.jpg',
         './resources/terrain/space-posy.jpg',
@@ -181,7 +184,7 @@ export class ThreeJSController extends Component {
         './resources/terrain/space-posz.jpg',
         './resources/terrain/space-negz.jpg',
     ]);
-    // texture.encoding = THREE.sRGBEncoding;
+    texture.encoding = THREE.SRGBColorSpace;
 
     const uniforms = {
       "topColor": { value: new THREE.Color(0x000000) },
@@ -194,17 +197,21 @@ export class ThreeJSController extends Component {
 
     this.scene_.fog.color.copy(uniforms["bottomColor"].value);
 
-
-    const skyGeo = new THREE.SphereGeometry(5000, 32, 15);
-    const skyMat = new THREE.MeshBasicMaterial({
-        uniforms: uniforms,
-        vertexShader: _VS,
-        fragmentShader: _FS,
-        side: THREE.BackSide
-    });
-
-    const sky = new THREE.Mesh(skyGeo, skyMat);
-    this.scene_.add(sky);
+    const cube2Urls = [
+      'space-posx.jpg',
+      'space-negx.jpg',
+      'space-posy.jpg',
+      'space-negy.jpg',
+      'space-posz.jpg',
+      'space-negz.jpg',
+    ];
+    const cube2Texture = new THREE.CubeTextureLoader()
+      .setPath( './resources/terrain/' )
+      .load(cube2Urls,
+        (hdrTexture: any) => {
+          this.scene_.background = hdrTexture;
+          this.scene_.environment = hdrTexture;
+        });
   }
 
   Update(_: any) {

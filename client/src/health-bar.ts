@@ -52,16 +52,18 @@ export class HealthBar extends Component {
         value: 1.0,
       },
     };
-    this.material_ = new THREE.MeshBasicMaterial( {
-      uniforms: uniforms,
-      vertexShader: _VS,
-      fragmentShader: _PS,
+    this.material_ = new THREE.MeshStandardMaterial({
       blending: THREE.NormalBlending,
       transparent: true,
       depthTest: false,
       depthWrite: false,
       side: THREE.DoubleSide,
     });
+    this.material_.onBeforeCompile = (shader: any) => {
+      shader.uniforms = uniforms;
+      shader.vertexShader = _VS;
+      shader.fragmentShader = _PS;
+    };
 
     this.geometry_ = new THREE.BufferGeometry();
 
