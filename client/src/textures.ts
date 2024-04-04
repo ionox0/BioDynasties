@@ -75,6 +75,7 @@ export const textures = (function() {
           diffuse.wrapS = THREE.RepeatWrapping;
           diffuse.wrapT = THREE.RepeatWrapping;
           diffuse.generateMipmaps = true;
+          diffuse.needsUpdate = true;
 
           // const caps = this._threejs.capabilities;
           // const aniso = caps.getMaxAnisotropy();

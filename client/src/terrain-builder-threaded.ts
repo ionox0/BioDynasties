@@ -97,7 +97,7 @@ export class TerrainChunkRebuilder_Threaded {
     this._params = params;
   }
 
-  _OnResult(chunk: { RebuildMeshFromData: (arg0: any) => void; Show: () => void; }, msg: { subject: string; data: any; }) {
+  _OnResult(chunk: any, msg: { subject: string; data: any; }) {
     if (msg.subject == 'build_chunk_result') {
       chunk.RebuildMeshFromData(msg.data);
       chunk.Show();

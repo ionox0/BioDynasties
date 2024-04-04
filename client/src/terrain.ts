@@ -1,8 +1,8 @@
 import * as THREE from '../../../three.js';
+import { uniform, texture, MeshBasicNodeMaterial, triplanarTexture } from '../../../three.js/examples/jsm/nodes/Nodes';
 
 import { Component } from './entity';
 import { CubeQuadTree } from './quadtree';
-import { terrain_shader } from './terrain-shader.js';
 import { TerrainChunkRebuilder_Threaded } from './terrain-builder-threaded';
 import { TextureSplatter } from './texture-splatter';
 import { textures } from './textures';
@@ -15,16 +15,18 @@ import { NoiseGenerator } from '../shared/noise';
 
 export class TerrainChunkManager extends Component {
     
+  _updatedAlready: boolean;
   _params: any;
-  _material: any;
   _builder: TerrainChunkRebuilder_Threaded;
   heightGenerator_: any;
   _biomes: any;
   _biomesParams: any;
   _colourNoise: any;
-  _colourNoiseParams: { octaves: number; persistence: number; lacunarity: number; exponentiation: number; scale: number; noiseType: string; seed: number; height: number; };
+  _colourNoiseParams: any;
   _groups: any[];
   _chunks: any;
+  _normalTextureAtlas: any;
+  _diffuseTextureAtlas: any;
 
   constructor(params: any) {
     super();
@@ -32,6 +34,7 @@ export class TerrainChunkManager extends Component {
   }
 
   _Init(params: any) {
+    this._updatedAlready = false;
     this._params = params;
 
     const loader = new THREE.TextureLoader();
@@ -67,38 +70,8 @@ export class TerrainChunkManager extends Component {
       './resources/terrain/bark1-normal3.jpg',
     ]);
 
-    this._material = new THREE.MeshStandardMaterial({
-      side: THREE.BackSide,
-      vertexColors: true,
-    });
-
-    // Todo: why does this make it so slow?
-    this._material.onBeforeCompile = (s: any) => {
-      let a = 0;
-      let vsh = s.vertexShader;
-      vsh = terrain_shader.VS1 + s.vertexShader;
-      const vi1 = vsh.search('#include <fog_vertex>');
-      vsh = [vsh.slice(0, vi1) + terrain_shader.VS2 + vsh.slice(vi1)].join('');
-      s.vertexShader = vsh;
-
-      s.fragmentShader = terrain_shader.PS1 + s.fragmentShader;
-      const fi1 = s.fragmentShader.search('#include <lights_physical_fragment>');
-      s.fragmentShader = [s.fragmentShader.slice(0, fi1) + terrain_shader.PS2 + s.fragmentShader.slice(fi1)].join('');
-
-      s.uniforms.TRIPLANAR_normalMap = {value: normal.Info['normal'].atlas};
-      s.uniforms.TRIPLANAR_diffuseMap = {value: diffuse.Info['diffuse'].atlas};
-      s.uniforms.TRIPLANAR_noiseMap = {value: noiseTexture};
-
-      diffuse.onLoad = () => {     
-        s.uniforms.TRIPLANAR_diffuseMap.value = diffuse.Info['diffuse'].atlas;
-      };
-      normal.onLoad = () => {     
-        s.uniforms.TRIPLANAR_normalMap.value = normal.Info['normal'].atlas;
-      };
-
-      // s.fragmentShader += 'poop';
-    };
-
+    this._normalTextureAtlas = normal;
+    this._diffuseTextureAtlas = diffuse;
     this._builder = new TerrainChunkRebuilder_Threaded(params);
 
     this._InitNoise();
@@ -178,7 +151,8 @@ export class TerrainChunkManager extends Component {
     const params = {
       group: group,
       transform: groupTransform,
-      material: this._material,
+      normalTextureAtlas: this._normalTextureAtlas,
+      diffuseTextureAtlas: this._diffuseTextureAtlas,
       width: width,
       offset: offset,
       // origin: this._params.camera.position.clone(),
@@ -235,6 +209,9 @@ export class TerrainChunkManager extends Component {
   }
 
   _UpdateVisibleChunks_Quadtree(target: { Position: any; }) {
+    if (this._updatedAlready) { return; }
+    this._updatedAlready = true;
+
     function _Key(c: any) {
       return c.position[0] + '/' + c.position[2] + ' [' + c.size + ']';
     }
@@ -290,6 +267,8 @@ export class TerrainChunkManager extends Component {
       };
     }
 
+    console.log('chunks:');
+    console.log(newTerrainChunks);
     this._chunks = newTerrainChunks;
   }
 }

@@ -194,9 +194,9 @@ export class ThreeJSController extends Component {
     const cube2Texture = new THREE.CubeTextureLoader()
       .setPath( './resources/terrain/' )
       .load(cube2Urls,
-        (hdrTexture: any) => {
-          this.scene_.background = hdrTexture;
-          this.scene_.environment = hdrTexture;
+        (texture: THREE.CubeTexture) => {
+          this.scene_.background = texture;
+          this.scene_.environment = texture;
         });
     // texture.encoding = THREE.SRGBColorSpace;
   }
