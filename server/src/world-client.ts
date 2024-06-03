@@ -281,7 +281,6 @@ export const world_client = (() => {
       vec3.add(this.entity_.position_, this.entity_.position_, movement);
 
       this.entity_.position_[1] = this.terrain_.Get(...this.entity_.position_)[0];
-      console.log(this.entity_.position_);
       this.entity_.UpdateGridClient_();
 
       const distance = vec3.distance(this.entity_.position_, this.target_.position_);
