@@ -18,7 +18,8 @@ export class NoiseGenerator {
   Get(x: number, y: number, z: number) {
     const G = 2.0 ** (-this._params.persistence);
     const xs = x / this._params.scale;
-    const ys = y / this._params.scale;
+    // Todo: noise should not depend on y-pos (make this param optional when used in terrain)
+    const ys = 1 / this._params.scale;
     const zs = z / this._params.scale;
     const noiseFunc = this._noise;
 
