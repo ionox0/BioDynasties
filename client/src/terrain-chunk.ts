@@ -10,6 +10,7 @@ export class TerrainChunk {
   _geometry: any;
   _material: any;
   _plane: any;
+  private _terrainData: any;
 
   constructor(params: any) {
     this._params = params;
@@ -25,7 +26,7 @@ export class TerrainChunk {
   }
 
   Show() {
-    this._plane.visible = true;
+    // this._plane.visible = true;
   }
 
   _Init(params: { material: any; }) {
@@ -49,33 +50,35 @@ export class TerrainChunk {
     this._plane.position.set(0, 0, 0);
   }
 
-  RebuildMeshFromData(data: any) {
+  RebuildMeshFromData(terrainData: any) {
 
     this._geometry.setAttribute(
-        'position', new THREE.Float32BufferAttribute(data.positions, 3));
+        'position', new THREE.Float32BufferAttribute(terrainData.positions, 3));
     this._geometry.setAttribute(
-        'normal', new THREE.Float32BufferAttribute(data.normals, 3));
+        'normal', new THREE.Float32BufferAttribute(terrainData.normals, 3));
     this._geometry.setAttribute(
-        'color', new THREE.Float32BufferAttribute(data.colours, 3));
+        'color', new THREE.Float32BufferAttribute(terrainData.colours, 3));
     this._geometry.setAttribute(
-        'coords', new THREE.Float32BufferAttribute(data.coords, 3));
+        'coords', new THREE.Float32BufferAttribute(terrainData.coords, 3));
     this._geometry.setAttribute(
-        'weights1', new THREE.Float32BufferAttribute(data.weights1, 4));
+        'weights1', new THREE.Float32BufferAttribute(terrainData.weights1, 4));
     this._geometry.setAttribute(
-        'weights2', new THREE.Float32BufferAttribute(data.weights2, 4));
+        'weights2', new THREE.Float32BufferAttribute(terrainData.weights2, 4));
     this._geometry.computeBoundingBox();
 
-    console.log('data:');
-    console.log(data);
+    this._terrainData = terrainData;
     const loader = new THREE.TextureLoader();
-    const noiseTexture = loader.load('./resources/terrain/simplex-noise.png');
+    loader.load('./resources/terrain/simplex-noise.png', (noiseTexture: any) => { this.initShader(noiseTexture); });
+  }
+
+  initShader(noiseTexture: any) {
     noiseTexture.wrapS = THREE.RepeatWrapping;
     noiseTexture.wrapT = THREE.RepeatWrapping;
 
     this._material = new MeshBasicNodeMaterial();
     this._material.side = THREE.BackSide;
 
-    this._material.colorNode = PS(this._geometry, data, this._params.normalTextureAtlas, this._params.diffuseTextureAtlas);
+    this._material.colorNode = PS(this._terrainData, this._params.normalTextureAtlas, this._params.diffuseTextureAtlas, noiseTexture);
 
     // this._material.colorNode = triplanarTexture(
     //   texture(noiseTexture),
@@ -86,11 +89,10 @@ export class TerrainChunk {
     
     this._plane = new THREE.Mesh(this._geometry, this._material);
     this._plane.castShadow = false;
-    // this._plane.receiveShadow = true;
-    // this._plane.frustumCulled = false;
+    this._plane.receiveShadow = false;
+    this._plane.frustumCulled = false;
     this._params.group.add(this._plane);
     this.Reinit(this._params);
-
   }
 
 }

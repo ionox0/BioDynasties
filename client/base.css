@@ -153,6 +153,19 @@ body {
   margin-top: 5px;
 }
 
+#hud-ui {
+  position: absolute;
+  left: 10px;
+  bottom: 0px; 
+  background: rgba(1.0, 1.0, 1.0, 0.0);
+  color: rgb(20, 96, 247);
+  width: 400px;
+  height: 200px;
+  padding: 10px 10px;
+  border-radius: 10px;
+  white-space: pre-line;
+}
+
 
 .quest-ui-layout {
   display: flex;
@@ -247,120 +260,4 @@ body {
   border-width: 2px;
   border-color: black;
   border-radius: 5px;
-}
-
-.stats-tooltip {
-  position: relative;
-  display: inline-block;
-  z-index: 100;
-}
-
-.stats-tooltip .stats-tooltiptext {
-  visibility: hidden;
-  width: 200px;
-  background-color: black;
-  opacity: 0.75;
-  text-align: center;
-  padding: 1em;
-  border-radius: 6px;
-  color: white;
-  font-size: medium;
-  position: absolute;
-  z-index: 1;
-  top: -5px;
-  right: 105%;
-}
-
-.stats-tooltip:hover .stats-tooltiptext {
-  visibility: visible;
-}
-
-.stats-title {
-  font-size: 3em;
-  color: white;
-  text-shadow: 4px 4px black;
-}
-
-.stats {
-  position: absolute;
-  right: 0px;
-  top: 0px;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  margin: 30px;
-  z-index: 1;
-}
-
-.stats-inner {
-  display: flex;
-  flex-direction: column;
-  background: rgba(1.0, 1.0, 1.0, 0.75);
-  padding: 20px 20px;
-  width: 250px;
-  padding-top: 5px;
-}
-
-.stats-row {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  font-size: 2em;
-  color: white;
-  text-shadow: 4px 4px black;
-}
-
-.inventory-title {
-  font-size: 3em;
-  color: white;
-  text-shadow: 4px 4px black;
-}
-
-.inventory {
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  margin: 30px;
-  z-index: 1;
-}
-
-.inventory-inner {
-  display: flex;
-  flex-direction: column;
-  background: rgba(1.0, 1.0, 1.0, 0.75);
-  padding: 20px 20px;
-  padding-top: 5px;
-}
-
-.inventory-row {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-}
-
-.inventory-column {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-}
-
-.inventory-character {
-  background-image: url('./resources/icons/ui/inventory-character.png');
-  background-size: cover;
-  width: 200px;
-  height: 350px;
-}
-
-.inventory-item {
-  border: black;
-  border-style: solid;
-  border-radius: 10%;
-  background-color: black;
-  width: 50px;
-  height: 50px;
-  margin: 2px;
-  background-size: cover;
 }

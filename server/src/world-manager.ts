@@ -87,7 +87,8 @@ export const world_manager = (() => {
       // Hack
       for (let x = 0; x < 1; ++x) {
         for (let z = 0; z < 1; ++z) {
-          if (Math.random() < 0.5) {
+          console.log('spawning monsters...');
+          if (Math.random() < 1) {
             const pos = vec3.fromValues(x * 50, 0, z * 50);
             this.spawners_.push(new MonsterSpawner({parent: this, pos: pos, class: 'beetle'}));
           } else {

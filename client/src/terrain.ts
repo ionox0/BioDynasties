@@ -257,6 +257,10 @@ export class TerrainChunkManager extends Component {
     for (let k in difference) {
       const [xp, yp, zp] = difference[k].position;
 
+      if (xp > 100 || xp < -100) {
+        continue;
+      }
+
       const offset = new THREE.Vector3(xp, yp, zp);
       newTerrainChunks[k] = {
         position: [xp, zp],

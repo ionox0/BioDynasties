@@ -11,12 +11,12 @@ import { math } from '../shared/math';
 export class NPCController extends Component {
   
   mixer: THREE.AnimationMixer;
-  clock: any;
+  clock: THREE.Clock;
   params_: any;
   group_: any;
   animations_: {[x: string]: any};
   queuedState_: any;
-  stateMachine_: any;
+  stateMachine_: CharacterFSM;
   target_: any;
   bones_: any;
   mixer_: any;
@@ -27,7 +27,7 @@ export class NPCController extends Component {
   constructor(params: any) {
     super();
     this.params_ = params;
-    this.instanceCount_ = 200;
+    this.instanceCount_ = 1;
   }
 
   Destroy() {
@@ -67,7 +67,7 @@ export class NPCController extends Component {
   InitComponent() {
     // this._RegisterHandler('health.death', (m: any) => { this.OnDeath_(m); });
     this._RegisterHandler('update.position', (m: { value: any; }) => { this.OnPosition_(m); });
-    this._RegisterHandler('update.rotation', (m: { value: any; }) => { this.OnRotation_(m); });
+    // this._RegisterHandler('update.rotation', (m: { value: any; }) => { this.OnRotation_(m); });
   }
 
   SetState(s: string) {
@@ -93,7 +93,7 @@ export class NPCController extends Component {
 
   OnPosition_(m: { value: any; }) {
     this.group_.position.copy(m.value);
-    this.RepositionInstances();
+    // this.RepositionInstances();
   }
 
   RepositionInstances() {
@@ -105,8 +105,11 @@ export class NPCController extends Component {
 
       const vec = new THREE.Vector3();
       vec.setFromMatrixPosition(dummyMat);
-      vec.x += (Math.random() - 0.5) * 2;
-      vec.z += (Math.random() - 0.5) * 2;
+      // vec.x += (Math.random() - 0.5) * 2;
+      // vec.z += (Math.random() - 0.5) * 2;
+      const terrain = this.FindEntity('terrain').GetComponent('TerrainChunkManager');
+      const yOff = terrain.GetHeight({x: vec.x + this.group_.position.x, z: vec.z + this.group_.position.z})[0];
+      vec.y = this.group_.position.y + yOff;
 
       dummyMat.setPosition(vec.x, vec.y, vec.z);
       dummyMat.toArray(this.mesh.instanceMatrix.array, i * 16);
@@ -115,7 +118,7 @@ export class NPCController extends Component {
 
   OnRotation_(m: { value: THREE.Quaternion; }) {
     if (this.mesh === null || this.mesh === undefined) return;
-    const newQuat = new THREE.Quaternion(m.value.x, m.value.z, - m.value.y, m.value.w);
+    const newQuat = new THREE.Quaternion(m.value.x, m.value.z, m.value.y, m.value.w);
     
     var position = new THREE.Vector3();
     var rotation = new THREE.Quaternion();
@@ -160,7 +163,7 @@ export class NPCController extends Component {
 
       this.target_.traverse( ( child: any ) => {
         if ( child.isMesh ) {
-          this.AddInstancing(child);
+          // this.AddInstancing(child);
         }
       });
 
@@ -258,6 +261,10 @@ export class NPCController extends Component {
     for (let i = 0; i < this.instanceCount_; i ++) {
       dummy.position.x = Math.random() * 200 - 100;
       dummy.position.z = Math.random() * 200 - 100;
+
+      const terrain = this.FindEntity('terrain').GetComponent('TerrainChunkManager');
+      dummy.position.y = terrain.GetHeight({x: dummy.position.x, z: dummy.position.z})[0];
+      
       dummy.updateMatrix();
       dummy.matrix.toArray(this.mesh.instanceMatrix.array, i * 16);
     }

@@ -1,18 +1,12 @@
 import { abs, float, vec3, tslFn, vec2, vec4, sin, fract, max, normalize, mul, texture, floor, sub, min, smoothstep, mix, storage, instanceIndex, uint, uv, normalLocal, positionLocal, positionWorld, normalWorld } from '../../../three.js/examples/jsm/nodes/Nodes';
 import StorageInstancedBufferAttribute from '../../../three.js/examples/jsm/renderers/common/StorageInstancedBufferAttribute';
-import * as THREE from '../../../three.js';
 
 
 function _VS() { }
 
-function _PS(geometry: any, data: any, normalTextureAtlas: any, diffuseTextureAtlas: any ) {
+function _PS(data: any, normalTextureAtlas: any, diffuseTextureAtlas: any, noiseTexture: any ) {
 
     const TRI_SCALE = float(10.0);
-
-    const loader = new THREE.TextureLoader();
-    const noiseTexture = loader.load('./resources/terrain/simplex-noise.png');
-    noiseTexture.wrapS = THREE.RepeatWrapping;
-    noiseTexture.wrapT = THREE.RepeatWrapping;
 
     const diffuseTex = diffuseTextureAtlas.Info['diffuse'].atlas;
     
@@ -42,18 +36,17 @@ function _PS(geometry: any, data: any, normalTextureAtlas: any, diffuseTextureAt
         const offa = vec2( sin( vec2( 3.0, 7.0 ).mul( ia ) ) ).toVar();
         const offb = vec2( sin( vec2( 3.0, 7.0 ).mul( ib ) ) ).toVar();
 
-        let coord1 = uv();
-        coord1 = coord1.setX( x.xy.add(offa).x ); 
-        coord1 = coord1.setY( x.xy.add(offa).y ); 
-        let coord2 = uv();
-        coord2 = coord2.setX( x.xy.add(offb).x ); 
-        coord2 = coord2.setY( x.xy.add(offb).y );
+        // let coord1 = uv();
+        // coord1 = coord1.setX( x.xy.add(offa).x ); 
+        // coord1 = coord1.setY( x.xy.add(offa).y ); 
+        // let coord2 = uv();
+        // coord2 = coord2.setX( x.xy.add(offb).x ); 
+        // coord2 = coord2.setY( x.xy.add(offb).y );
+        // const cola = vec4(texture(diffuseTex, coord1).depth(x.z)).toVar();
+        // const colb = vec4(texture(diffuseTex, coord2).depth(x.z)).toVar();
 
-        const cola = vec4(texture(diffuseTex, coord1).depth(x.z)).toVar();
-        const colb = vec4(texture(diffuseTex, coord2).depth(x.z)).toVar();
-
-        // const cola = vec4(texture(diffuseTex, x.xy.add(offa).xy).depth(x.z)).toVar();
-        // const colb = vec4(texture(diffuseTex, x.xy.add(offb).xy).depth(x.z)).toVar();
+        const cola = vec4(texture(diffuseTex, x.xy.add(offa).xy).depth(x.z)).toVar();
+        const colb = vec4(texture(diffuseTex, x.xy.add(offb).xy).depth(x.z)).toVar();
 
         return mix(cola, colb, smoothstep(0.2, 0.8, f.sub(mul(0.1, sum(cola.xyz.sub(colb.xyz))))));
     };
@@ -88,8 +81,6 @@ function _PS(geometry: any, data: any, normalTextureAtlas: any, diffuseTextureAt
     const weights1BufferNode = storage( weights1Buffer, 'vec4', data.weights1.length * 4 );
     const weights2BufferNode = storage( weights2Buffer, 'vec4', data.weights2.length * 4 );
 
-    geometry.computeBoundingBox();
-
     const main = tslFn( (data: any) => {
         // const index = uint(uv().x.mul(data.weights2.length).floor()).toVar();
         
@@ -115,10 +106,11 @@ function _PS(geometry: any, data: any, normalTextureAtlas: any, diffuseTextureAt
         const d3 = Triplanar_UV(worldPosition, worldSpaceNormal, weightIndices.element(3));
         d3.w.mulAssign(weightValues.element(3));
         
-        const diffuseBlended = vec4(TerrainBlend_4(d0, d1, d2, d3)).toVar();
+        const diffuseBlended = vec4(TerrainBlend_4(d0.mul(0.1), d1.mul(1.1), d2.mul(1.1), d3.mul(1.1))).toVar();
         const diffuse = vec3(diffuseBlended.xyz).toVar();
         const finalColour = vec3(diffuse).toVar();
 
+        // return diffuseBlended;
         return vec4(finalColour, 1.0);
     });
 

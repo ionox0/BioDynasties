@@ -1,4 +1,5 @@
 import {quat, vec3} from 'gl-matrix';
+import { HeightGenerator } from '../../client/shared/terrain-height';
 
 
 export const world_client = (() => {
@@ -6,10 +7,12 @@ export const world_client = (() => {
   const _TIMEOUT = 600.0;
 
   class WorldClient {
+    
     entity_: any;
     client_: any;
     timeout_: number;
     entityCache_: {};
+
     constructor(client: any, entity: any) {
       this.entity_ = entity;
 
@@ -249,10 +252,12 @@ export const world_client = (() => {
   };
 
   class AIState_FollowToAttack extends AIState {
+    
     target_: any;
     entity_: any;
     terrain_: any;
     parent_: any;
+
     constructor(target: any) {
       super();
       this.target_ = target;
@@ -275,7 +280,8 @@ export const world_client = (() => {
 
       vec3.add(this.entity_.position_, this.entity_.position_, movement);
 
-      this.entity_.position_[1] = this.terrain_.Get(...this.entity_.position_)[0] / 1.5;
+      this.entity_.position_[1] = this.terrain_.Get(...this.entity_.position_)[0];
+      console.log(this.entity_.position_);
       this.entity_.UpdateGridClient_();
 
       const distance = vec3.distance(this.entity_.position_, this.target_.position_);
@@ -328,10 +334,12 @@ export const world_client = (() => {
   };
 
   class WorldAIClient extends WorldClient {
-    terrain_: any;
+
+    terrain_: HeightGenerator;
     onDeath_: any;
     fsm_: AIStateMachine;
     deathTimer_: number;
+
     constructor(entity: any, terrain: any, onDeath: any) {
       super(new FakeClient(), entity);
       this.terrain_ = terrain;

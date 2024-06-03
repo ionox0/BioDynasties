@@ -130,23 +130,45 @@ export class ThreeJSController extends Component {
     this.postProcessing.outputNode = scenePassColorBlurred;
 
     // lights
-    const centerLight = new THREE.PointLight( 0xff9900, 1, 100 );
-    centerLight.position.y = 4.5;
-    centerLight.position.z = - 2;
-    centerLight.power = 400;
-    this.scene_.add( centerLight );
+    const centerLight1 = new THREE.PointLight( 0xff9900, 1, 100 );
+    centerLight1.position.x = 10;
+    centerLight1.position.y = 10;
+    centerLight1.position.z = 10;
+    centerLight1.power = 4000000;
+    this.scene_.add( centerLight1 );
+
+    const centerLight2 = new THREE.PointLight( 0xff9900, 1, 100 );
+    centerLight2.position.x = -10;
+    centerLight2.position.y = 10;
+    centerLight2.position.z = -10;
+    centerLight2.power = 4000000;
+    this.scene_.add( centerLight2 );
+
+    const centerLight3 = new THREE.PointLight( 0xff9900, 1, 100 );
+    centerLight3.position.x = 10;
+    centerLight3.position.y = 10;
+    centerLight3.position.z = -10;
+    centerLight3.power = 4000000;
+    this.scene_.add( centerLight3 );
+
+    const centerLight4 = new THREE.PointLight( 0xff9900, 1, 100 );
+    centerLight4.position.x = -10;
+    centerLight4.position.y = 10;
+    centerLight4.position.z = 10;
+    centerLight4.power = 4000000;
+    this.scene_.add( centerLight4 );
 
     const cameraLight = new THREE.PointLight( 0x0099ff, 1, 100 );
-    cameraLight.power = 400;
+    cameraLight.power = 400000;
     this.camera_.add( cameraLight );
 
     this.scene_.fog = new THREE.FogExp2(0x89b2eb, 0.00002);
 
-    let light = new THREE.DirectionalLight(0x8088b3, 0.7);
-    light.position.set(-10, 500, 10);
+    let light = new THREE.DirectionalLight(0x8088b3, 1.7);
+    light.position.set(10, 50, 10);
     light.target.position.set(0, 0, 0);
     // Note: shadows destroy performance of GPU birds
-    // light.castShadow = true;
+    light.castShadow = true;
     light.shadow.bias = -0.001;
     light.shadow.mapSize.width = 4096;
     light.shadow.mapSize.height = 4096;
@@ -178,7 +200,7 @@ export class ThreeJSController extends Component {
       "exponent": { value: 0.3 },
       "background": { value: texture },
     };
-    // uniforms["topColor"].value.copy(hemiLight.color);
+    uniforms["topColor"].value.copy(hemiLight.color);
 
     // Todo: use TextureNode shaders and fix fog
     this.scene_.fog.color.copy(uniforms["bottomColor"].value);
@@ -207,11 +229,20 @@ export class ThreeJSController extends Component {
       return;
     }
     const pos = player._position;
-
+    // debugger;
+    this.updateHUD(player);
     this.sun_.position.copy(pos);
     this.sun_.position.add(new THREE.Vector3(-50, 200, -10));
     this.sun_.target.position.copy(pos);
     this.sun_.updateMatrixWorld();
     this.sun_.target.updateMatrixWorld();
+  }
+
+  updateHUD(player: any) {
+    document.getElementById('hud-ui').textContent = `
+      x: ${Math.round(player._position.x)}\n
+      y: ${Math.round(player._position.y)}\n
+      z: ${Math.round(player._position.z)}
+    `
   }
 }
