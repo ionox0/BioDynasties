@@ -1,5 +1,4 @@
 import * as THREE from '../../../three.js';
-import { pass, mix, range, color, oscSine, timerLocal, MeshStandardNodeMaterial } from '../../../three.js/examples/jsm/nodes/Nodes.js';
 
 import { Component } from './entity';
 import { BasicCharacterControllerProxy, CharacterFSM} from './player-entity'
@@ -106,9 +105,10 @@ export class NPCController extends Component {
       const vec = new THREE.Vector3();
       vec.setFromMatrixPosition(dummyMat);
       // vec.x += (Math.random() - 0.5) * 2;
+      // vec.y += (Math.random() - 0.5) * 2;
       // vec.z += (Math.random() - 0.5) * 2;
       const terrain = this.FindEntity('terrain').GetComponent('TerrainChunkManager');
-      vec.y = terrain.GetHeight({x: vec.x, y: 0, z: vec.z})[0];
+      vec.y = terrain.GetHeight({x: vec.x + this.group_.position.x, y: 0, z: vec.z + this.group_.position.z})[0] - this.group_.position.y;
 
       dummyMat.setPosition(vec.x, vec.y, vec.z);
       dummyMat.toArray(this.mesh.instanceMatrix.array, i * 16);
@@ -151,8 +151,8 @@ export class NPCController extends Component {
     // loader.LoadSkinnedGLB(path, base, (glb: any) => {
       this.object_ = glb;
       this.target_ = glb.scene;
-      this.target_.scale.setScalar(modelData.scale);
-      // this.target_.scale.setScalar(5);
+      // Note: messing with the scale makes it harder to convert from global to local height coords
+      // this.target_.scale.setScalar(modelData.scale);
       this.target_.visible = false;
       this.group_.add(this.target_);
 
@@ -259,8 +259,8 @@ export class NPCController extends Component {
 
     const dummy = new THREE.Object3D();
     for (let i = 0; i < this.instanceCount_; i ++) {
-      dummy.position.x = Math.random() * 200 - 100;
-      dummy.position.z = Math.random() * 200 - 100;
+      dummy.position.x = Math.random() * (i * 10);
+      dummy.position.z = Math.random() * (i * 10);
 
       const terrain = this.FindEntity('terrain').GetComponent('TerrainChunkManager');
       dummy.position.y = terrain.GetHeight({x: dummy.position.x, z: dummy.position.z})[0];
