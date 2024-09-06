@@ -139,6 +139,9 @@ export class AttackState extends State {
   }
 
   Enter(prevState: { Name: string | number; }) {
+    if (!('attack' in this._parent._proxy.animations)) return;
+    if (!this._parent._proxy.animations['attack']) return;
+
     this._action = this._parent._proxy.animations['attack'].action;
     const mixer = this._action.getMixer();
     mixer.addEventListener('finished', this._FinishedCallback);
@@ -185,8 +188,13 @@ export class WalkState extends State {
   }
 
   Enter(prevState: { Name: string; }) {
+    if (!('walk' in this._parent._proxy.animations)) return;
+    if (!this._parent._proxy.animations['walk']) return;
+
     const curAction = this._parent._proxy.animations['walk'].action;
     if (prevState) {
+      if (!(prevState.Name in this._parent._proxy.animations)) return;
+      if (!this._parent._proxy.animations[prevState.Name]) return;
       const prevAction = this._parent._proxy.animations[prevState.Name].action;
 
       curAction.enabled = true;

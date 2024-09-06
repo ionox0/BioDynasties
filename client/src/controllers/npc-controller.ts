@@ -20,6 +20,7 @@ export class NPCController extends Component {
   instanceCount_: number;
   mesh: any;
   object_: any;
+  private _modelData: any;
 
   constructor(params: any) {
     super();
@@ -140,6 +141,7 @@ export class NPCController extends Component {
   LoadModels_() {
     const classType = this.params_.desc.character.class;
     const modelData = defs.CHARACTER_MODELS[classType];
+    this._modelData = modelData;
 
     const loader = this.FindEntity('loader').GetComponent('LoadController');
 
@@ -183,7 +185,7 @@ export class NPCController extends Component {
       
       const _FindAnim = (animName: string) => {
         for (let i = 0; i < glb.animations.length; i++) {
-          if (glb.animations[i].name.includes(animName)) {
+          if (glb.animations[i].name.toLowerCase().includes(animName)) {
             const clip = glb.animations[i];
             const action = this.mixer_.clipAction(clip);
             return {
@@ -195,12 +197,12 @@ export class NPCController extends Component {
         return null;
       };
 
-      this.animations_['idle'] = _FindAnim('_bee_hover');
-      this.animations_['walk'] = _FindAnim('_bee_hover');
-      this.animations_['run'] = _FindAnim('_bee_hover');
-      this.animations_['death'] = _FindAnim('_bee_hover');
-      this.animations_['attack'] = _FindAnim('_bee_hover');
-      this.animations_['dance'] = _FindAnim('_bee_hover');
+      this.animations_['idle'] = _FindAnim('idle') || _FindAnim('stand');
+      this.animations_['walk'] = _FindAnim('walk') || _FindAnim('hover');
+      this.animations_['run'] = _FindAnim('run');
+      this.animations_['death'] = _FindAnim('death');
+      this.animations_['attack'] = _FindAnim('attack');
+      this.animations_['dance'] = _FindAnim('dance');
 
       // todo: hack until i figure out how to make / rename animations in blender
       if (glb.animations.length > 0) {
@@ -242,6 +244,14 @@ export class NPCController extends Component {
 
   AddInstancing(child: any) {
     this.mesh = child;
+    this.mesh.matrixAutoUpdate = true;
+    this.mesh.traverse(function( node: any ) {
+      if ( node.isMesh ) {
+        node.matrixAutoUpdate = true;
+        node.matrixWorldAutoUpdate = true;
+      }
+    });
+
     this.mesh.isInstancedMesh = true;
     this.mesh.instanceMatrix = new THREE.InstancedBufferAttribute(new Float32Array(this.instanceCount_ * 16), 16);
     this.mesh.count = this.instanceCount_;
@@ -249,8 +259,8 @@ export class NPCController extends Component {
     const dummy = new THREE.Object3D();
     for (let i = 0; i < this.instanceCount_; i ++) {
       // Distance between instances
-      dummy.position.x = Math.random() * (i * 1000);
-      dummy.position.z = Math.random() * (i * 1000);
+      dummy.position.x = (i * 100) * this._modelData.scale;
+      dummy.position.z = (i + 100 * (-1)**i) * this._modelData.scale;
 
       const terrain = this.FindEntity('terrain').GetComponent('TerrainChunkManager');
       dummy.position.y = terrain.GetHeight({x: dummy.position.x, z: dummy.position.z})[0];
@@ -259,6 +269,11 @@ export class NPCController extends Component {
       dummy.matrix.toArray(this.mesh.instanceMatrix.array, i * 16);
     }
     this.mesh.instanceMatrix.needsUpdate = true;
+    this.mesh.material.needsUpdate = true;
+    this.mesh.instanceMatrix.version += 1;
+
+    this.mesh.needsUpdate = true;
+    this.mesh.matrixWorldNeedsUpdate = true;
   }
 
   Update(timeInSeconds: any) {
