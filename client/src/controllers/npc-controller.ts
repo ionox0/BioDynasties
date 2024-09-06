@@ -242,15 +242,6 @@ export class NPCController extends Component {
 
   AddInstancing(child: any) {
     this.mesh = child;
-
-    this.mesh.matrixAutoUpdate = true;
-    this.mesh.traverse(function( node: any ) {
-      if ( node.isMesh ) {
-        node.matrixAutoUpdate = true;
-        node.matrixWorldAutoUpdate = true;
-      }
-    });
-
     this.mesh.isInstancedMesh = true;
     this.mesh.instanceMatrix = new THREE.InstancedBufferAttribute(new Float32Array(this.instanceCount_ * 16), 16);
     this.mesh.count = this.instanceCount_;
@@ -267,16 +258,6 @@ export class NPCController extends Component {
       dummy.matrix.toArray(this.mesh.instanceMatrix.array, i * 16);
     }
     this.mesh.instanceMatrix.needsUpdate = true;
-    this.mesh.material.needsUpdate = true;
-    this.mesh.instanceMatrix.version += 1;
-
-    this.mesh.needsUpdate = true;
-    this.mesh.matrixWorldNeedsUpdate = true;
-    
-    // this.mesh.computeBoundingBox();
-    // this.mesh.computeBoundingSphere();
-    // this.mesh.geometry.computeBoundingBox();
-    // this.mesh.geometry.computeBoundingSphere();
   }
 
   Update(timeInSeconds: any) {
