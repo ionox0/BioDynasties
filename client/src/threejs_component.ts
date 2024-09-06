@@ -129,35 +129,6 @@ export class ThreeJSController extends Component {
     this.postProcessing = new PostProcessing(this.threejs_);
     this.postProcessing.outputNode = scenePassColorBlurred;
 
-    // lights
-    const centerLight1 = new THREE.PointLight( 0xff9900, 1, 100 );
-    centerLight1.position.x = 10;
-    centerLight1.position.y = 10;
-    centerLight1.position.z = 10;
-    centerLight1.power = 4000000;
-    this.scene_.add( centerLight1 );
-
-    const centerLight2 = new THREE.PointLight( 0xff9900, 1, 100 );
-    centerLight2.position.x = -10;
-    centerLight2.position.y = 10;
-    centerLight2.position.z = -10;
-    centerLight2.power = 4000000;
-    this.scene_.add( centerLight2 );
-
-    const centerLight3 = new THREE.PointLight( 0xff9900, 1, 100 );
-    centerLight3.position.x = 10;
-    centerLight3.position.y = 10;
-    centerLight3.position.z = -10;
-    centerLight3.power = 4000000;
-    this.scene_.add( centerLight3 );
-
-    const centerLight4 = new THREE.PointLight( 0xff9900, 1, 100 );
-    centerLight4.position.x = -10;
-    centerLight4.position.y = 10;
-    centerLight4.position.z = 10;
-    centerLight4.power = 4000000;
-    this.scene_.add( centerLight4 );
-
     const cameraLight = new THREE.PointLight( 0x0099ff, 1, 100 );
     cameraLight.power = 400000;
     this.camera_.add( cameraLight );
