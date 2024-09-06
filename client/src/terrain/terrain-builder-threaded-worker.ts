@@ -1,4 +1,4 @@
-import * as THREE from '../../../../three.js/build/three.cjs';
+import * as THREE from '../../../../three.js';
 
 import { TextureSplatter } from '../texture-splatter' ;
 
