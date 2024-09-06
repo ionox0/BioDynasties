@@ -120,6 +120,30 @@ export const defs = (() => {
             strength: 2,
         },
         name: 'bee',
+    },
+    scorpion: {
+        base: 'scorpion.glb',
+        path: './resources/bugs/scorpion/',
+        anchors: {
+          rightHand: 'Body',
+        },
+        nameOffset: 11,
+        attack: {
+            timing: 0.35,
+            cooldown: 2.0,
+            type: 'melee',
+            range: 2,
+        },
+        scale: 0.2,
+        inventory: {
+            'inventory-equip-1': 'weapon.hammer1',
+        },
+        stats: {
+            health: 20,
+            maxHealth: 200,
+            strength: 2,
+        },
+        name: 'scorpion',
     }
   };
 
