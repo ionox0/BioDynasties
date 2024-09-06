@@ -3,7 +3,7 @@ const path = require('path');
 module.exports = {
   entry: {
     'bundle': './src/main.ts',
-    'webworker': './src/terrain-builder-threaded-worker.ts'
+    'webworker': './src/terrain/terrain-builder-threaded-worker.ts'
   },
   module: {
     rules: [
