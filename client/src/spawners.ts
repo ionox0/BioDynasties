@@ -77,11 +77,6 @@ export class PlayerSpawner extends Component {
         scene: this.params_.scene,
     }));
 
-    if (playerParams.character.class == 'sorceror') {
-      player.AddComponent(
-          new SorcerorEffect(params));
-    }
-
     this.Manager.Add(player, 'player');
 
     return player;
