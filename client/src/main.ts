@@ -15,7 +15,7 @@ import { TerrainChunkManager } from './terrain';
 import { spatial_hash_grid } from '../shared/spatial-hash-grid';
 
 
-class CrappyMMOAttempt {
+class GameInstance {
 
   entityManager_: EntityManager;
   grid_: any;
@@ -165,9 +165,9 @@ class CrappyMMOAttempt {
 let _APP = null;
 
 if (document.readyState !== 'loading') {
-  _APP = new CrappyMMOAttempt();
+  _APP = new GameInstance();
 } else {
   document.addEventListener('DOMContentLoaded', function () {
-    _APP = new CrappyMMOAttempt();
+    _APP = new GameInstance();
   });
 }
