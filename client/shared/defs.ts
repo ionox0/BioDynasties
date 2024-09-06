@@ -26,7 +26,7 @@ export const defs = (() => {
         name: 'Parrot',
     },
     beetle: {
-        base: 'black_ox_beetle_small.glb',
+        base: 'black_ox_beetle.glb',
         path: './resources/bugs/beetle/',
         anchors: {
           rightHand: 'Mandible1_L_54',
@@ -38,7 +38,7 @@ export const defs = (() => {
             type: 'melee',
             range: 2,
         },
-        scale: 0.2,
+        scale: 0.7,
         inventory: {
             'inventory-equip-1': 'weapon.hammer1',
         },
@@ -47,7 +47,7 @@ export const defs = (() => {
             maxHealth: 200,
             strength: 2,
         },
-        name: 'Beetle',
+        name: 'beetle',
     },
     spider: {
         base: 'spider_small.glb',
@@ -134,7 +134,7 @@ export const defs = (() => {
             type: 'melee',
             range: 2,
         },
-        scale: 0.2,
+        scale: 2.0,
         inventory: {
             'inventory-equip-1': 'weapon.hammer1',
         },

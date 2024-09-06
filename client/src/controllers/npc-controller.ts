@@ -24,7 +24,7 @@ export class NPCController extends Component {
   constructor(params: any) {
     super();
     this.params_ = params;
-    this.instanceCount_ = 10;
+    this.instanceCount_ = 5;
   }
 
   Destroy() {
@@ -147,7 +147,7 @@ export class NPCController extends Component {
       this.object_ = glb;
       this.target_ = glb.scene;
       // Note: messing with the scale makes it harder to convert from global to local height coords
-      // this.target_.scale.setScalar(modelData.scale);
+      this.target_.scale.setScalar(modelData.scale);
       this.target_.visible = false;
       this.group_.add(this.target_);
 
@@ -248,8 +248,9 @@ export class NPCController extends Component {
 
     const dummy = new THREE.Object3D();
     for (let i = 0; i < this.instanceCount_; i ++) {
-      dummy.position.x = Math.random() * (i * 10);
-      dummy.position.z = Math.random() * (i * 10);
+      // Distance between instances
+      dummy.position.x = Math.random() * (i * 1000);
+      dummy.position.z = Math.random() * (i * 1000);
 
       const terrain = this.FindEntity('terrain').GetComponent('TerrainChunkManager');
       dummy.position.y = terrain.GetHeight({x: dummy.position.x, z: dummy.position.z})[0];
