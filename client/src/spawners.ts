@@ -12,7 +12,6 @@ import { NPCController } from './npc-controller';
 import { NetworkEntityController as NEC } from './network-entity-controller';
 import { NetworkEntityController as NPC } from './network-player-controller';
 import { FloatingName } from './floating-name';
-import { SorcerorEffect } from './sorceror-effect';
 import { BloodEffect } from './blood-effect';
 
 
@@ -138,14 +137,6 @@ export class NetworkEntitySpawner extends Component {
         camera: this.params_.camera,
         scene: this.params_.scene,
     }));
-
-    if (desc.character.class == 'sorceror') {
-      npc.AddComponent(
-          new SorcerorEffect({
-              camera: this.params_.camera,
-              scene: this.params_.scene,
-          }));
-    }
 
     this.Manager.Add(npc, name);
 
