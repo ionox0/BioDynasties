@@ -8,7 +8,7 @@ import { SpatialGridController } from './controllers/spatial-grid-controller';
 import { EquipWeapon } from './equip-weapon-component';
 import { AttackController } from './controllers/attacker-controller';
 
-import { NPCController } from './npc-controller';
+import { NPCController } from './controllers/npc-controller';
 import { NetworkEntityController as NEC } from './controllers/network-entity-controller';
 import { NetworkEntityController as NPC } from './controllers/network-player-controller';
 import { FloatingName } from './floating-name';
