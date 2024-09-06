@@ -69,9 +69,6 @@ class CrappyMMOAttempt {
     threejs.AddComponent(mainController);
     this.entityManager_.Add(threejs, 'threejs');
 
-    // birdsObj = new Birds(mainController);
-    // birdsObj.loadBirds();
-
     // Hack
     this.scene_ = threejs.GetComponent('ThreeJSController').scene_;
     this.camera_ = threejs.GetComponent('ThreeJSController').camera_;
@@ -150,8 +147,6 @@ class CrappyMMOAttempt {
       this.threejs_.render(this.scene_, this.camera_);
       this.Step_(t - this.previousRAF_);
       this.previousRAF_ = t;
-
-      // birdsObj.render();
 
       setTimeout(() => {
         this.RAF_();

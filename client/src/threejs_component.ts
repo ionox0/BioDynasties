@@ -138,7 +138,6 @@ export class ThreeJSController extends Component {
     let light = new THREE.DirectionalLight(0x8088b3, 1.7);
     light.position.set(10, 50, 10);
     light.target.position.set(0, 0, 0);
-    // Note: shadows destroy performance of GPU birds
     light.castShadow = true;
     light.shadow.bias = -0.001;
     light.shadow.mapSize.width = 4096;
