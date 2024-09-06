@@ -1,7 +1,7 @@
-import * as THREE from '../../../three.js';
+import * as THREE from '../../../../three.js';
 
-import { Component } from './components//entity';
-import { math } from '../shared/math';
+import { Component } from './entity';
+import { math } from '../../shared/math';
 
 
 const _VS = `

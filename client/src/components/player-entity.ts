@@ -1,10 +1,10 @@
-import * as THREE from '../../../three.js';
+import * as THREE from '../../../../three.js';
 
-import { Component } from './components//entity';
-import { FiniteStateMachine } from './finite-state-machine';
-import * as player_state from './player-state';
+import { Component } from './entity';
+import { FiniteStateMachine } from '../finite-state-machine';
+import * as player_state from '../player-state';
 
-import { defs } from '../shared/defs';
+import { defs } from '../../shared/defs';
 
 
 export class CharacterFSM extends FiniteStateMachine {

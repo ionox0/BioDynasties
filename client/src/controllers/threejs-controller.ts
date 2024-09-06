@@ -1,9 +1,9 @@
-import * as THREE from '../../../three.js';
+import * as THREE from '../../../../three.js';
+import { pass, texture } from '../../../../three.js/examples/jsm/nodes/Nodes.js';
+import WebGPURenderer from '../../../../three.js/examples/jsm/renderers/webgpu/WebGPURenderer.js';
+import PostProcessing from '../../../../three.js/examples/jsm/renderers/common/PostProcessing.js';
 
-import { Component } from "./components/entity";
-import { pass, texture } from '../../../three.js/examples/jsm/nodes/Nodes';
-import WebGPURenderer from '../../../three.js/examples/jsm/renderers/webgpu/WebGPURenderer.js';
-import PostProcessing from '../../../three.js/examples/jsm/renderers/common/PostProcessing.js';
+import { Component } from "../components/entity";
 
 
 

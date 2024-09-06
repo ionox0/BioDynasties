@@ -1,6 +1,6 @@
 import * as THREE from '../../../../three.js';
 
-import { EntityManager } from '../entity-manager';
+import { EntityManager } from './entity-manager.js';
 
 
 export class Entity {

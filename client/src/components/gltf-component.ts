@@ -1,8 +1,8 @@
-import * as THREE from '../../../three.js';
-import { GLTFLoader } from '../../../three.js/examples/jsm/loaders/GLTFLoader';
-import { FBXLoader } from '../../../three.js/examples/jsm/loaders/FBXLoader';
+import * as THREE from '../../../../three.js';
+import { GLTFLoader } from '../../../../three.js/examples/jsm/loaders/GLTFLoader.js';
+import { FBXLoader } from '../../../../three.js/examples/jsm/loaders/FBXLoader.js';
 
-import { Component } from './components//entity';
+import { Component } from './entity';
 
 
 export class StaticModelComponent extends Component {

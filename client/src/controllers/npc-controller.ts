@@ -2,7 +2,7 @@ import * as THREE from '../../../../three.js';
 
 import { defs } from '../../shared/defs';
 import { Component } from '../components/entity';
-import { BasicCharacterControllerProxy, CharacterFSM} from '../player-entity'
+import { BasicCharacterControllerProxy, CharacterFSM} from '../components/player-entity'
 
 
 export class NPCController extends Component {

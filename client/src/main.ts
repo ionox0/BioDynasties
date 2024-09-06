@@ -1,15 +1,15 @@
 import { GUI } from 'dat.gui';
 
-import { Entity } from './components//entity';
-import { EntityManager } from './entity-manager';
+import { Entity } from './components/entity';
+import { EntityManager } from './components/entity-manager';
 
 import { UIController } from './controllers/ui-controller';
 import { NetworkController } from './controllers/network-controller';
 import { SceneryController } from './controllers/scenery-controller';
 import { LoadController } from './controllers/load-controller';
-import { ThreeJSController } from './threejs_component';
+import { ThreeJSController } from './controllers/threejs-controller';
 
-import { LevelUpComponentSpawner } from './level-up-component';
+import { LevelUpComponentSpawner } from './components/level-up-component';
 import { PlayerSpawner, NetworkEntitySpawner } from './spawners';
 import { TerrainChunkManager } from './terrain';
 import { spatial_hash_grid } from '../shared/spatial-hash-grid';

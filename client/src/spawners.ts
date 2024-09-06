@@ -1,17 +1,17 @@
 import { Component, Entity } from './components/entity';
 
 import { ThirdPersonCamera } from './third-person-camera';
-import { BasicCharacterController } from './player-entity'
-import { HealthComponent } from './health-component';
+import { BasicCharacterController } from './components/player-entity'
+import { HealthComponent } from './components/health-component';
 import { BasicCharacterControllerInput } from './player-input';
 import { SpatialGridController } from './controllers/spatial-grid-controller';
-import { EquipWeapon } from './equip-weapon-component';
+import { EquipWeapon } from './components/equip-weapon-component';
 import { AttackController } from './controllers/attacker-controller';
 
 import { NPCController } from './controllers/npc-controller';
 import { NetworkEntityController as NEC } from './controllers/network-entity-controller';
 import { NetworkEntityController as NPC } from './controllers/network-player-controller';
-import { FloatingName } from './floating-name';
+import { FloatingName } from './components/floating-name';
 import { BloodEffect } from './blood-effect';
 
 

@@ -1,8 +1,8 @@
-import * as THREE from '../../../three.js';
-import { FBXLoader } from '../../../three.js/examples/jsm/loaders/FBXLoader';
+import * as THREE from '../../../../three.js';
+import { FBXLoader } from '../../../../three.js/examples/jsm/loaders/FBXLoader.js';
 
-import { Component } from './components/entity';
-import { defs } from '../shared/defs';
+import { Component } from './entity';
+import { defs } from '../../shared/defs';
 
 
 export class EquipWeapon extends Component {

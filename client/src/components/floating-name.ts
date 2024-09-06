@@ -1,7 +1,7 @@
-import * as THREE from '../../../three.js';
+import * as THREE from '../../../../three.js';
 
-import { defs } from '../shared/defs';
-import { Component } from './components//entity';
+import { defs } from '../../shared/defs';
+import { Component } from './entity';
 
 
 export class FloatingName extends Component {

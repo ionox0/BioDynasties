@@ -1,4 +1,4 @@
-import { Component } from "./components/entity";
+import { Component } from './entity';
 
 
 export class HealthComponent extends Component {
