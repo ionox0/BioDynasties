@@ -90,7 +90,7 @@ export const world_manager = (() => {
           console.log('spawning monsters...');
           if (Math.random() < 1) {
             const pos = vec3.fromValues(x * 50, 0, z * 50);
-            this.spawners_.push(new MonsterSpawner({parent: this, pos: pos, class: 'beetle'}));
+            this.spawners_.push(new MonsterSpawner({parent: this, pos: pos, class: 'bee'}));
           } else {
             const pos = vec3.fromValues(x * 50, 0, z * 50);
             this.spawners_.push(new MonsterSpawner({parent: this, pos: pos, class: 'spider'}));

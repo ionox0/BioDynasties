@@ -145,10 +145,7 @@ export class NPCController extends Component {
 
     const loader = this.FindEntity('loader').GetComponent('LoadController');
 
-    const path = 'resources/characters/'
-    const base = 'Michelle.glb'
     loader.LoadSkinnedGLB(modelData.path, modelData.base, (glb: any) => {
-    // loader.LoadSkinnedGLB(path, base, (glb: any) => {
       this.object_ = glb;
       this.target_ = glb.scene;
       // Note: messing with the scale makes it harder to convert from global to local height coords
@@ -157,9 +154,11 @@ export class NPCController extends Component {
       this.group_.add(this.target_);
 
       this.mixer = new THREE.AnimationMixer(this.target_);
-      const action = this.mixer.clipAction(glb.animations[0]);
-      action.play();
-      this.params_.renderer.setAnimationLoop(() => {this.animate();});
+      if (glb.animations.length > 0) {
+        const action = this.mixer.clipAction(glb.animations[1]);
+        action.play();
+        this.params_.renderer.setAnimationLoop(() => {this.animate();});
+      }
 
       this.target_.traverse( ( child: any ) => {
         if ( child.isMesh ) {
@@ -198,39 +197,41 @@ export class NPCController extends Component {
         return null;
       };
 
-      this.animations_['idle'] = _FindAnim('TPose');
-      this.animations_['walk'] = _FindAnim('TPose');
-      this.animations_['run'] = _FindAnim('TPose');
-      this.animations_['death'] = _FindAnim('TPose');
-      this.animations_['attack'] = _FindAnim('TPose');
-      this.animations_['dance'] = _FindAnim('TPose');
+      this.animations_['idle'] = _FindAnim('_bee_hover');
+      this.animations_['walk'] = _FindAnim('_bee_hover');
+      this.animations_['run'] = _FindAnim('_bee_hover');
+      this.animations_['death'] = _FindAnim('_bee_hover');
+      this.animations_['attack'] = _FindAnim('_bee_hover');
+      this.animations_['dance'] = _FindAnim('_bee_hover');
 
       // todo: hack until i figure out how to make / rename animations in blender
-      if (this.animations_['idle'] == undefined || this.animations_['idle'] == null) {
-        const clip = glb.animations[0];
-        const action = this.mixer_.clipAction(clip);
-        const anim = {
-          clip: clip,
-          action: action
+      if (glb.animations.length > 0) {
+        if (this.animations_['idle'] == undefined || this.animations_['idle'] == null) {
+          const clip = glb.animations[0];
+          const action = this.mixer_.clipAction(clip);
+          const anim = {
+            clip: clip,
+            action: action
+          }
+          this.animations_['idle'] = anim;
+          this.animations_['walk'] = anim;
+          this.animations_['run'] = anim;
+          this.animations_['death'] = anim;
+          this.animations_['attack'] = anim;
+          this.animations_['dance'] = anim;
         }
-        this.animations_['idle'] = anim;
-        this.animations_['walk'] = anim;
-        this.animations_['run'] = anim;
-        this.animations_['death'] = anim;
-        this.animations_['attack'] = anim;
-        this.animations_['dance'] = anim;
-      }
 
-      this.target_.visible = true;
+        this.target_.visible = true;
 
-      this.stateMachine_ = new CharacterFSM(
-          new BasicCharacterControllerProxy(this.animations_));
+        this.stateMachine_ = new CharacterFSM(
+            new BasicCharacterControllerProxy(this.animations_));
 
-      if (this.queuedState_) {
-        this.stateMachine_.SetState(this.queuedState_)
-        this.queuedState_ = null;
-      } else {
-        this.stateMachine_.SetState('idle');
+        if (this.queuedState_) {
+          this.stateMachine_.SetState(this.queuedState_)
+          this.queuedState_ = null;
+        } else {
+          this.stateMachine_.SetState('idle');
+        }
       }
 
       this.Broadcast({
@@ -242,7 +243,6 @@ export class NPCController extends Component {
   }
 
   AddInstancing(child: any) {
-    // this.mesh = this.target_.getObjectByName("Ch03");
     this.mesh = child;
 
     this.mesh.matrixAutoUpdate = true;
