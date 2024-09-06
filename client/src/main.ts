@@ -1,6 +1,6 @@
 import { GUI } from 'dat.gui';
 
-import { Entity } from './entity';
+import { Entity } from './components//entity';
 import { EntityManager } from './entity-manager';
 
 import { UIController } from './ui-controller';

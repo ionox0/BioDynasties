@@ -1,4 +1,4 @@
-import { Component } from './entity';
+import { Component } from './components/entity';
 
 
 export class UIController extends Component {

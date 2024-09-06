@@ -1,7 +1,7 @@
 import * as THREE from '../../../three.js';
 
 import { ParticleSystem } from "./particle-system";
-import { Entity, Component} from "./entity";
+import { Entity, Component} from "./components/entity";
 
 
 export class LevelUpComponentSpawner extends Component {

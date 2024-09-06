@@ -1,6 +1,6 @@
 import * as THREE from '../../../three.js';
 
-import { Component } from "./entity";
+import { Component } from "./components//entity";
 
 
 export class PickableComponent extends Component {

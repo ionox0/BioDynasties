@@ -1,10 +1,9 @@
 import * as THREE from '../../../three.js';
 
-import { Component } from './entity';
+import { Component } from './components//entity';
 import { BasicCharacterControllerProxy, CharacterFSM} from './player-entity'
 
 import { defs } from '../shared/defs';
-import { math } from '../shared/math';
 
 
 export class NPCController extends Component {

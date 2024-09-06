@@ -4,7 +4,7 @@ import { clone as threeClone } from '../../../three.js/examples/jsm/utils/Skelet
 import { FBXLoader}  from '../../../three.js/examples/jsm/loaders/FBXLoader';
 import { GLTFLoader } from '../../../three.js/examples/jsm/loaders/GLTFLoader';
 
-import { Component } from "./entity";
+import { Component } from "./components/entity";
 import { MeshoptDecoder } from 'meshoptimizer';
 
 

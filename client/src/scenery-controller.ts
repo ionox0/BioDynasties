@@ -1,6 +1,6 @@
 import * as THREE from '../../../three.js';
 
-import { Entity, Component } from './entity';
+import { Entity, Component } from './components/entity';
 import { RenderComponent } from './render-component';
 import { SpatialGridController } from './spatial-grid-controller';
 

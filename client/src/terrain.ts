@@ -1,7 +1,7 @@
 import * as THREE from '../../../three.js';
 import { uniform, texture, MeshBasicNodeMaterial, triplanarTexture } from '../../../three.js/examples/jsm/nodes/Nodes';
 
-import { Component } from './entity';
+import { Component } from './components/entity';
 import { CubeQuadTree } from './quadtree';
 import { TerrainChunkRebuilder_Threaded } from './terrain/terrain-builder-threaded';
 import { TextureSplatter } from './texture-splatter';

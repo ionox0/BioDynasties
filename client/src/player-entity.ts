@@ -1,6 +1,6 @@
 import * as THREE from '../../../three.js';
 
-import { Component } from './entity';
+import { Component } from './components//entity';
 import { FiniteStateMachine } from './finite-state-machine';
 import * as player_state from './player-state';
 

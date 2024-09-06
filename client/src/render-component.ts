@@ -3,7 +3,7 @@ import * as THREE from '../../../three.js';
 import { GLTFLoader } from '../../../three.js/examples/jsm/loaders/GLTFLoader';
 import { OBJLoader } from '../../../three.js/examples/jsm/loaders/OBJLoader';
 
-import { Component } from './entity';
+import { Component } from './components/entity';
 
 
 export class RenderComponent extends Component {

@@ -1,7 +1,7 @@
 import * as THREE from '../../../three.js';
 
 import { ParticleEmitter, ParticleSystem } from "./particle-system";
-import { Component } from "./entity";
+import { Component } from "./components//entity";
 
 
 export class BloodEffectEmitter extends ParticleEmitter {
