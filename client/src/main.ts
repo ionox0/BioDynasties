@@ -3,10 +3,10 @@ import { GUI } from 'dat.gui';
 import { Entity } from './components//entity';
 import { EntityManager } from './entity-manager';
 
-import { UIController } from './ui-controller';
-import { NetworkController } from './network-controller';
-import { SceneryController } from './scenery-controller';
-import { LoadController } from './load-controller';
+import { UIController } from './controllers/ui-controller';
+import { NetworkController } from './controllers/network-controller';
+import { SceneryController } from './controllers/scenery-controller';
+import { LoadController } from './controllers/load-controller';
 import { ThreeJSController } from './threejs_component';
 
 import { LevelUpComponentSpawner } from './level-up-component';

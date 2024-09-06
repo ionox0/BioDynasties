@@ -1,6 +1,6 @@
-import * as THREE from '../../../three.js';
+import * as THREE from '../../../../three.js';
 
-import { Component } from './components/entity';
+import { Component } from '../components/entity';
 
 
 export class NetworkEntityController extends Component {

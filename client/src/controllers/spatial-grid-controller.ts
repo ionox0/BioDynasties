@@ -1,4 +1,4 @@
-import { Component } from './components/entity';
+import { Component } from '../components/entity';
 
 
 export class SpatialGridController extends Component {

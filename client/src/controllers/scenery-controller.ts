@@ -1,11 +1,11 @@
-import * as THREE from '../../../three.js';
+import * as THREE from '../../../../three.js';
 
-import { Entity, Component } from './components/entity';
-import { RenderComponent } from './render-component';
+import { Entity, Component } from '../components/entity';
+import { RenderComponent } from '../render-component';
 import { SpatialGridController } from './spatial-grid-controller';
 
-import {math} from '../shared/math';
-import { NoiseGenerator } from '../shared/noise';
+import {math} from '../../shared/math';
+import { NoiseGenerator } from '../../shared/noise';
 
 
 const _SCENERY: any = {

@@ -1,10 +1,10 @@
-import * as THREE from '../../../three.js';
-import { clone as threeClone } from '../../../three.js/examples/jsm/utils/SkeletonUtils';
+import * as THREE from '../../../../three.js';
+import { clone as threeClone } from '../../../../three.js/examples/jsm/utils/SkeletonUtils.js';
 
-import { FBXLoader}  from '../../../three.js/examples/jsm/loaders/FBXLoader';
-import { GLTFLoader } from '../../../three.js/examples/jsm/loaders/GLTFLoader';
+import { FBXLoader}  from '../../../../three.js/examples/jsm/loaders/FBXLoader.js';
+import { GLTFLoader } from '../../../../three.js/examples/jsm/loaders/GLTFLoader.js';
 
-import { Component } from "./components/entity";
+import { Component } from "../components/entity";
 import { MeshoptDecoder } from 'meshoptimizer';
 
 

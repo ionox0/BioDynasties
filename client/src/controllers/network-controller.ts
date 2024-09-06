@@ -1,6 +1,6 @@
 import { io } from 'socket.io-client';
 
-import { Component } from './components/entity';
+import { Component } from '../components/entity';
 
 
 export class NetworkController extends Component {
