@@ -3,7 +3,7 @@ import { uniform, texture, MeshBasicNodeMaterial, triplanarTexture } from '../..
 
 import { Component } from './entity';
 import { CubeQuadTree } from './quadtree';
-import { TerrainChunkRebuilder_Threaded } from './terrain-builder-threaded';
+import { TerrainChunkRebuilder_Threaded } from './terrain/terrain-builder-threaded';
 import { TextureSplatter } from './texture-splatter';
 import { textures } from './textures';
 import { utils } from './utils';
