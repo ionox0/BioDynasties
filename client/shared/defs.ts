@@ -1,30 +1,6 @@
 export const defs = (() => {
 
   const _CHARACTER_MODELS: any = {
-    michelle: {
-        base: 'Michelle.glb',
-        path: './resources/characters/',
-        anchors: {
-          rightHand: 'Body',
-        },
-        nameOffset: 11,
-        attack: {
-            timing: 0.35,
-            cooldown: 2.0,
-            type: 'melee',
-            range: 2,
-        },
-        scale: 0.2,
-        inventory: {
-            'inventory-equip-1': 'weapon.hammer1',
-        },
-        stats: {
-            health: 20,
-            maxHealth: 200,
-            strength: 2,
-        },
-        name: 'michelle',
-    },
     parrot: {
         base: 'Parrot.glb',
         path: './resources/nature/',
@@ -144,99 +120,7 @@ export const defs = (() => {
             strength: 2,
         },
         name: 'bee',
-    },
-    paladin: {
-      base: 'paladin_small.glb',
-      path: './resources/characters/',
-      anchors: {
-        rightHand: 'RightHandIndex1',
-      },
-      nameOffset: 11,
-      attack: {
-        timing: 0.35,
-        cooldown: 1.0,
-        type: 'melee',
-        range: 10,
-      },
-      scale: 6.0,
-      inventory: {
-        'inventory-1': 'weapon.axe1',
-        'inventory-2': 'weapon.hammer1',
-        'inventory-equip-1': 'weapon.sword1',
-      },
-      stats: {
-        health: 200,
-        maxHealth: 200,
-        strength: 50,
-      },
-      name: 'Paladin',
-    },
-    sorceror: {
-      base: 'sorceror_small.glb',
-      path: './resources/characters/',
-      anchors: {
-        rightHand: 'RightHandIndex1',
-      },
-      nameOffset: 10,
-      attack: {
-        timing: 1.0,
-        cooldown: 1.5,
-        type: 'magic',
-        range: 40,
-      },
-      scale: 4.0,
-      inventory: {},
-      stats: {
-        health: 100,
-        maxHealth: 100,
-        strength: 10,
-      },
-      name: 'Sorceror',
-    },
-    warrok: {
-      base: 'warrok.glb',
-      path: './resources/characters/',
-      anchors: {
-        rightHand: 'RightHandIndex1',
-      },
-      nameOffset: 16,
-      attack: {
-        timing: 1.5,
-        cooldown: 2.6,
-        type: 'melee',
-        range: 15,
-      },
-      scale: 8.0,
-      inventory: {},
-      stats: {
-        health: 1000,
-        maxHealth: 1000,
-        strength: 200,
-      },
-      name: 'Monster Guy',
-    },
-    zombie: {
-      base: 'zombie-guy.glb',
-      path: './resources/characters/',
-      anchors: {
-        rightHand: 'RightHandIndex1',
-      },
-      nameOffset: 8,
-      attack: {
-        timing: 1.0,
-        cooldown: 3.0,
-        type: 'melee',
-        range: 10,
-      },
-      scale: 4.0,
-      inventory: {},
-      stats: {
-        health: 20,
-        maxHealth: 50,
-        strength: 25,
-      },
-      name: 'Zombie',
-    },
+    }
   };
 
   const _WEAPONS_DATA: any = {
