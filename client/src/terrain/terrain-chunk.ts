@@ -1,7 +1,7 @@
 import * as THREE from '../../../../three.js';
-import { MeshBasicNodeMaterial, float, texture, triplanarTexture } from '../../../../three.js/examples/jsm/nodes/Nodes';
+import { MeshBasicNodeMaterial } from '../../../../three.js/examples/jsm/nodes/Nodes';
 
-import { PS, VS } from './terrain-shader-tlsl_2';
+import { PS } from './terrain-shader';
 
 
 export class TerrainChunk {
