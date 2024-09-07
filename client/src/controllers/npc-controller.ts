@@ -107,7 +107,8 @@ export class NPCController extends Component {
       // vec.y += (Math.random() - 0.5) * 2;
       // vec.z += (Math.random() - 0.5) * 2;
       const terrain = this.FindEntity('terrain').GetComponent('TerrainChunkManager');
-      vec.y = terrain.GetHeight({x: vec.x + this.group_.position.x, y: 0, z: vec.z + this.group_.position.z})[0] - this.group_.position.y;
+      const location = {x: vec.x + this.group_.position.x, y: 0, z: vec.z + this.group_.position.z};
+      vec.y = terrain.GetHeight(location)[0] - this.group_.position.y;
 
       dummyMat.setPosition(vec.x, vec.y, vec.z);
       dummyMat.toArray(this.mesh.instanceMatrix.array, i * 16);
