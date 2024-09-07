@@ -249,6 +249,7 @@ export class NPCController extends Component {
     const instanceArr = new Float32Array(this.instanceCount_ * 16);
     this.mesh.instanceMatrix = new THREE.InstancedBufferAttribute(instanceArr, 16);
     this.mesh.count = this.instanceCount_;
+    this.mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
 
     const dummy = new THREE.Object3D();
     for (let i = 0; i < this.instanceCount_; i ++) {
