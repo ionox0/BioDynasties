@@ -245,14 +245,6 @@ export class NPCController extends Component {
 
   AddInstancing(child: any) {
     this.mesh = child;
-    this.mesh.matrixAutoUpdate = true;
-    this.mesh.traverse(function( node: any ) {
-      if ( node.isMesh ) {
-        node.matrixAutoUpdate = true;
-        node.matrixWorldAutoUpdate = true;
-      }
-    });
-
     this.mesh.isInstancedMesh = true;
     const instanceArr = new Float32Array(this.instanceCount_ * 16);
     this.mesh.instanceMatrix = new THREE.InstancedBufferAttribute(instanceArr, 16);
@@ -261,8 +253,8 @@ export class NPCController extends Component {
     const dummy = new THREE.Object3D();
     for (let i = 0; i < this.instanceCount_; i ++) {
       // Distance between instances
-      dummy.position.x = (i * 100) * this._modelData.scale;
-      dummy.position.z = (i + 100 * (-1)**i) * this._modelData.scale;
+      dummy.position.x = (i * 10);
+      dummy.position.z = (10 * (-1)**i);
 
       const terrain = this.FindEntity('terrain').GetComponent('TerrainChunkManager');
       dummy.position.y = terrain.GetHeight({x: dummy.position.x, z: dummy.position.z})[0];
@@ -271,11 +263,6 @@ export class NPCController extends Component {
       dummy.matrix.toArray(this.mesh.instanceMatrix.array, i * 16);
     }
     this.mesh.instanceMatrix.needsUpdate = true;
-    this.mesh.material.needsUpdate = true;
-    this.mesh.instanceMatrix.version += 1;
-
-    this.mesh.needsUpdate = true;
-    this.mesh.matrixWorldNeedsUpdate = true;
   }
 
   Update(timeInSeconds: any) {
