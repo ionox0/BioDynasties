@@ -103,9 +103,7 @@ export class NPCController extends Component {
 
       const vec = new THREE.Vector3();
       vec.setFromMatrixPosition(dummyMat);
-      // vec.x += (Math.random() - 0.5) * 2;
-      // vec.y += (Math.random() - 0.5) * 2;
-      // vec.z += (Math.random() - 0.5) * 2;
+
       const terrain = this.FindEntity('terrain').GetComponent('TerrainChunkManager');
       const location = {x: vec.x + this.group_.position.x, y: 0, z: vec.z + this.group_.position.z};
       vec.y = terrain.GetHeight(location)[0] - this.group_.position.y;
