@@ -3,3 +3,4 @@ node_modules/
 client/build
 src/assets/big*
 npm-debug.log
+.vscode

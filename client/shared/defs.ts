@@ -28,6 +28,7 @@ export const defs = (() => {
     beetle: {
         base: 'black_ox_beetle.glb',
         path: './resources/bugs/beetle/',
+        rotationY: -90,
         anchors: {
           rightHand: 'Mandible1_L_54',
         },
@@ -134,7 +135,7 @@ export const defs = (() => {
             type: 'melee',
             range: 2,
         },
-        scale: 1.5,
+        scale: 1.0,
         inventory: {
             'inventory-equip-1': 'weapon.hammer1',
         },

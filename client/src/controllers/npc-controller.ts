@@ -151,6 +151,9 @@ export class NPCController extends Component {
       this.target_ = glb.scene;
       // Note: messing with the scale makes it harder to convert from global to local height coords
       this.target_.scale.setScalar(modelData.scale);
+      if (modelData.rotationY) {
+        this.group_.rotateY(THREE.MathUtils.degToRad(modelData.rotationY));
+      }
       this.target_.visible = false;
       this.group_.add(this.target_);
 
