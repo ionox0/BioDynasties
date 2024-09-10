@@ -85,10 +85,10 @@ export const world_manager = (() => {
       this.tickTimer_ = 0.0;
 
       // Hack
-      for (let x = 0; x < 5; ++x) {
-        for (let z = 0; z < 5; ++z) {
+      for (let x = 0; x < 1; ++x) {
+        for (let z = 0; z < 1; ++z) {
           console.log('spawning monsters...');
-          if (Math.random() < 0.33) {
+          if (Math.random() < 0.99) {
             const pos = vec3.fromValues(x * 50, 0, z * 50);
             this.spawners_.push(new MonsterSpawner({parent: this, pos: pos, class: 'scorpion'}));
           } else if (Math.random() < 0.67) {

@@ -135,7 +135,7 @@ export const defs = (() => {
             type: 'melee',
             range: 2,
         },
-        scale: 1.0,
+        scale: 0.7,
         inventory: {
             'inventory-equip-1': 'weapon.hammer1',
         },

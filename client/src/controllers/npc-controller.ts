@@ -108,6 +108,9 @@ export class NPCController extends Component {
       const location = {x: vec.x + this.group_.position.x, y: 0, z: vec.z + this.group_.position.z};
       vec.y = terrain.GetHeight(location)[0] - this.group_.position.y;
 
+      vec.x = parseInt((document.getElementById('debug-x') as HTMLInputElement).value);
+      vec.z = parseInt((document.getElementById('debug-z') as HTMLInputElement).value);
+
       dummyMat.setPosition(vec.x, vec.y, vec.z);
       dummyMat.toArray(this.mesh.instanceMatrix.array, i * 16);
     }
@@ -116,7 +119,10 @@ export class NPCController extends Component {
 
   OnRotation_(m: { value: THREE.Quaternion; }) {
     if (this.mesh === null || this.mesh === undefined) return;
-    const newQuat = new THREE.Quaternion(m.value.x, m.value.y, m.value.z, m.value.w);
+    // const newQuat = new THREE.Quaternion(m.value.x, m.value.y, m.value.z, m.value.w);
+    const val = parseInt((document.getElementById('debug-rotate') as HTMLInputElement).value);
+    const newQuat = new THREE.Quaternion();
+    newQuat.setFromAxisAngle( new THREE.Vector3( 0, val, 0 ), Math.PI / 2 );
     
     var position = new THREE.Vector3();
     var rotation = new THREE.Quaternion();
@@ -154,6 +160,8 @@ export class NPCController extends Component {
       }
       this.target_.visible = false;
       this.group_.add(this.target_);
+      const box = new THREE.BoxHelper(this.group_, 0xffff00);
+      this.group_.add(box);
 
       this.mixer = new THREE.AnimationMixer(this.target_);
       if (glb.animations.length > 0) {
