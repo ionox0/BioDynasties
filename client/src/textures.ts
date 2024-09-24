@@ -20,8 +20,8 @@ export const textures = (function() {
 
       onLoad: any;
       _threejs: any;
-      _manager: any;
-      _loader: any;
+      _manager: THREE.LoadingManager;
+      _loader: THREE.TextureLoader;
       _textures: {[k: string]: any};
 
       constructor(params: { threejs: any; }) {
