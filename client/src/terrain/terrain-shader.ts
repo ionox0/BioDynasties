@@ -2,9 +2,7 @@ import { abs, float, vec3, tslFn, vec2, vec4, sin, fract, max, normalize, mul, t
 import StorageInstancedBufferAttribute from '../../../../three.js/examples/jsm/renderers/common/StorageInstancedBufferAttribute';
 
 
-function _VS() { }
-
-function _PS(data: any, normalTextureAtlas: any, diffuseTextureAtlas: any, noiseTexture: any ) {
+export function PS(data: any, normalTextureAtlas: any, diffuseTextureAtlas: any, noiseTexture: any ) {
 
     const TRI_SCALE = float(10.0);
 
@@ -117,6 +115,3 @@ function _PS(data: any, normalTextureAtlas: any, diffuseTextureAtlas: any, noise
     return main(data);
 
 }
-
-export const PS = _PS;
-export const VS = _VS;
