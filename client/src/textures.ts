@@ -30,7 +30,7 @@ export const textures = (function() {
         this.onLoad = () => {};
       }
 
-      Load(atlas: string, names: string[]) {
+      async Load(atlas: string, names: string[]) {
         this._LoadAtlas(atlas, names);
       }
 

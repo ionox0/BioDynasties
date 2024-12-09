@@ -33,7 +33,7 @@ export class TerrainChunkManager extends Component {
     this._Init(params);
   }
 
-  _Init(params: any) {
+  async _Init(params: any) {
     this._updatedAlready = false;
     this._params = params;
 
@@ -43,8 +43,11 @@ export class TerrainChunkManager extends Component {
     noiseTexture.wrapS = THREE.RepeatWrapping;
     noiseTexture.wrapT = THREE.RepeatWrapping;
 
+    // Note the need to await loading of TextureAtlas before 
+    //  TextureNode from nodes system can handle them:
+    //  https://github.com/ionox0/BioDynasties/issues/11
     const diffuse = new textures.TextureAtlas(params);
-    diffuse.Load('diffuse', [
+    await diffuse.Load('diffuse', [
       './resources/terrain/dirt_01_diffuse-1024.png',
       './resources/terrain/grass1-albedo3-1024.png',
       './resources/terrain/sandyground-albedo-1024.png',
@@ -58,7 +61,7 @@ export class TerrainChunkManager extends Component {
 
 
     const normal = new textures.TextureAtlas(params);
-    normal.Load('normal', [
+    await normal.Load('normal', [
       './resources/terrain/dirt_01_normal-1024.jpg',
       './resources/terrain/grass1-normal-1024.jpg',
       './resources/terrain/sandyground-normal-1024.jpg',

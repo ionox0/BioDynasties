@@ -80,11 +80,16 @@ export class TerrainChunk {
 
     this._material.colorNode = PS(this._terrainData, this._params.normalTextureAtlas, this._params.diffuseTextureAtlas, noiseTexture);
 
+    console.log(this._params);
     // this._material.colorNode = triplanarTexture(
-    //   texture(noiseTexture),
-    //   texture(noiseTexture),
-    //   texture(noiseTexture),
-    //   float(0.01)
+    //   // texture(this._params.normalTextureAtlas.Info['diffuse'].atlas),
+    //   texture(this._params.diffuseTextureAtlas._textures['diffuse'].textures[0]),
+    //   texture(this._params.diffuseTextureAtlas._textures['diffuse'].textures[2]),
+    //   texture(this._params.diffuseTextureAtlas._textures['diffuse'].textures[1]),
+    //   // texture(noiseTexture),
+    //   float(0.01),
+    //   positionLocal,
+    //   normalLocal
     // );
     
     this._plane = new THREE.Mesh(this._geometry, this._material);
