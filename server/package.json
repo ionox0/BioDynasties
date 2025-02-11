@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "gl-matrix": "^3.4.3",
-    "socket.io": "^4.7.4",
+    "socket.io": "^4.8.1",
     "socket.io-client": "^4.7.4"
   },
   "devDependencies": {
